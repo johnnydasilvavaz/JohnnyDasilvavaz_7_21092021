@@ -1,27 +1,21 @@
 require('dotenv').config();
 const cryptoJS = require('crypto-js');
-const crypto = require('crypto')
-const jwt = require('jsonwebtoken');
 const validator = require('validator');
 
 exports.getProfile = (req, res, next) => {
-    //Check if token ID != userId
-    if (req.params.userId != req.body.userId) {
-        return res.status(403).json({message: '403: unauthorized request'});
-    }
-    const sql = '';
-    db.query(sql, (err, data, fields) => {
-        if (err) return res.status(400).json(err);
-
-    })
+    const sql = 'SELECT name, forname, email FROM users WHERE uid=?;';
+    db.query(sql, req.params.userId, (err, data, fields) => {
+        if (err) return res.status(400).json({err});
+        return res.status(200).json({name: data[0].name, forname: data[0].forname, email: data[0].email});
+    });
 }
 
 exports.getPosts = (req, res, next) => {
-    //Check if token ID != userId
-    if (req.params.userId != req.body.userId) {
-        return res.status(403).json({message: '403: unauthorized request'});
-    }
-
+    const sql = 'SELECT * FROM posts WHERE uid=?;';
+    db.query(sql, req.params.userId, (err, data, fields) => {
+        if (err) return res.status(400).json({err});
+        return res.status(200).json({});
+    });
 }
 
 exports.modify = (req, res, next) => {
