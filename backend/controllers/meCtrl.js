@@ -26,8 +26,8 @@ exports.modify = (req, res, next) => {
         !validator.isStrongPassword(req.body.password)) {
         return res.status(400).json({message: "A field is empty or incorrect !"})
     }
-    const sql = "UPDATE users SET name='" + req.body.name + "', forname='" + req.body.forname + "', password='" + cryptoJS.SHA256(req.body.password).toString(cryptoJS.enc.Hex) + "' WHERE uid='" + req.params.userId + "';";
-    db.query(sql, (err, data, fields) => {
+    const sql = "UPDATE users SET name='?', forname='?', password='?' WHERE uid='?';";
+    db.query(sql, (req.body.name, req.body.forname, cryptoJS.SHA256(req.body.password).toString(cryptoJS.enc.Hex), req.params.userId), (err, data, fields) => {
         if(err) return res.status(400).json({err});
         return res.status(200).json({message: "User updated !"});
     });
