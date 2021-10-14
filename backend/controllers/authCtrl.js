@@ -49,12 +49,13 @@ exports.login = (req, res, next) => {
     if (!req.body.password || !req.body.email || !validator.isStrongPassword(req.body.password) || !validator.isEmail(req.body.email) ) {
         return res.status(400).json({message: "Wrong email or password !"})
     }
-    const sql = 'SELECT password, id, uid FROM users WHERE email=?;';
+    const sql = 'SELECT password, forname, name, avatar, uid, email FROM users WHERE email=?;';
     db.query(sql, req.body.email, (err, data, fields) => {
         if(err) return res.status(400).json({err});
+        if (data[0] == null) return res.status(401).json({error: `le compte n'existe pas !`});
         if (cryptoJS.SHA256(req.body.password).toString(cryptoJS.enc.Hex) == data[0].password) {
             res.status(200).json({
-                userId: data[0].id,
+                user: {uid: data[0].uid, forname: data[0].forname, name: data[0].name, avatar: data[0].avatar, email: data[0].email},
                 token: jwt.sign(
                     {userId: data[0].uid},
                     process.env.TOKEN_SECRET,

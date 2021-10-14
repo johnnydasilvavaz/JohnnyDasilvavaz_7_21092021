@@ -1,0 +1,93 @@
+<template>
+  <div class="signup">
+    <form class="signup__form" @submit.prevent="handleSubmit">
+      <h1>Création de compte</h1>
+      <div class="form__item">
+        <label for="forname">Prénom</label>
+        <input type="text" name="forname" id="forname" v-model="forname">
+      </div>
+      <div class="form__item">
+        <label for="name">Nom</label>
+        <input type="text" name="name" id="name" v-model="name">
+      </div>
+      <div class="form__item">
+        <label for="email">Adresse email</label>
+        <input type="text" name="email" id="email" v-model="email">
+      </div>
+      <div class="form__item">
+        <label for="password">Mot de passse</label>
+        <input type="password" name="password" id="password" v-model="password">
+      </div>
+      <div class="form__item">
+        <label >Confirmation</label>
+        <input type="password" name="passwordConfirm" id="passwordConfirm" v-model="passwordConfirm">
+      </div>
+      <button class="btn">Créer mon compte</button>
+    </form>
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+export default {
+  name: 'Signup',
+  data() {
+      return {
+          forname: '',
+          name: '',
+          email: '',
+          password: '',
+          passwordConfirm: ''
+      }
+  },
+  methods: {
+    async handleSubmit() {
+      if (this.passwordConfirm != this.password) {
+          return console.log('Password and confirmation are not identical');
+      }
+      const response = await axios.post('auth/signup', {
+      forname: this.forname,
+      name: this.name,
+      email: this.email,
+      password: this.password
+      });
+
+      console.log(response);
+
+      this.$router.push('/Login');
+    }
+  }
+}
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+h3 {
+  margin: 40px 0 0;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+li {
+  display: inline-block;
+  margin: 0 10px;
+}
+a {
+  color: #42b983;
+}
+
+.signup {
+  display: flex;
+  justify-content: center;
+}
+
+.signup__form {
+  border-bottom: .1rem solid #091F43;
+  box-shadow:
+    0px 2.3px 3.6px rgba(0, 0, 0, 0.024),
+    0px 6.3px 10px rgba(0, 0, 0, 0.035),
+    0px 15.1px 24.1px rgba(0, 0, 0, 0.046),
+    0px 50px 80px rgba(0, 0, 0, 0.07);
+}
+</style>

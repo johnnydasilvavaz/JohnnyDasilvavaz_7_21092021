@@ -1,15 +1,15 @@
 <template>
     <div>
-        <h1>Bienvenue</h1>
+        <h1>Cette page n'existe pas !</h1>
     </div>
 </template>
 
 <script>
     export default {
-        name: 'Home'
+        name: 'NotFound'
     }
 </script>
 
-<style lang="scss" scoped>
+<style>
 
 </style>

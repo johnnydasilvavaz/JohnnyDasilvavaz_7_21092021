@@ -9,10 +9,24 @@ exports.getOnePost = (req, res, next) => {
 };
 
 exports.getAllPosts = (req, res, next) => {
-    const sql = 'SELECT * FROM posts ORDER BY date DESC;';
+    const sql = 'SELECT posts.id AS pid, posts.uid AS puid, posts.date AS pdate, posts.text AS ptext, posts.imgUrl AS pimgUrl, posts.likes AS plikes, name AS pname, forname AS pforname, avatar AS pavatar FROM posts INNER JOIN users ON posts.uid=users.uid ORDER BY date DESC;';
     db.query(sql, (err, data, fields) => {
         if (err) return res.status(401).json({err});
-        return res.status(200).json({data});
+        const posts = {...data};
+        const sql2 = 'SELECT comments.*, name, forname, avatar FROM comments INNER JOIN users ON comments.uid=users.uid ORDER BY date DESC;';
+        db.query(sql2, (err, data, fields) => {
+            if (err) return res.status(403).json({err});
+            const coms = {...data};
+            if (!coms) return res.status(200).json({...posts});
+            for (let c in coms) {
+                for (let p in posts) {
+                    if (posts[p].pid == coms[c].post_id && !posts[p].com) {
+                        posts[p] = {...posts[p], com: {...coms[c]}};
+                    }
+                }
+            }
+            return res.status(200).json({...posts});
+        })
     });
 };
 
@@ -41,16 +55,15 @@ exports.modifyPost = (req, res, next) => {
 };
 
 exports.deletePost = (req, res, next) => {
-    const sql = 'DELETE likes, comments, posts FROM likes INNER JOIN comments INNER JOIN posts WHERE likes.postid=? AND comments.postid=? AND posts.id=?;';
-    const post = [req.params.id, req.params.id, req.params.id];
-    db.query(sql, post, (err, data, fields) => {
+    const sql = 'DELETE FROM posts WHERE posts.id=? ;';
+    db.query(sql, [req.params.id], (err, data, fields) => {
         if (err) return res.status(401).json({err});
         return res.status(200).json({message: 'Post removed !'})
     })
 };
 
 exports.createComment = (req, res, next) => {
-    const sql = 'INSERT INTO comments (uid, text, postid) VALUES (?);';
+    const sql = 'INSERT INTO comments (uid, text, post_id) VALUES (?);';
     const comment = [req.params.userId, req.body.text, req.params.id];
     db.query(sql, [comment], (err, data, fields) => {
         if (err) return res.status(401).json({err});
@@ -59,10 +72,10 @@ exports.createComment = (req, res, next) => {
 };
 
 exports.getComments = (req, res, next) => {
-    const sql = 'SELECT * FROM comments WHERE id=?;';
+    const sql = 'SELECT comments.*, users.name, users.forname, users.avatar FROM comments LEFT JOIN users ON comments.uid=users.uid WHERE post_id=?;';
     db.query(sql, [req.params.id], (err, data, fields) => {
         if (err) return res.status(401).json({err});
-        return res.status(200).json({data});
+        return res.status(200).json({...data});
     });
 };
 
@@ -71,20 +84,20 @@ exports.likePost = (req, res, next) => {
     db.query(sqlCheck, [req.params.userId], (err, data, fields) => {
         if (err) return res.status(401).json({err});
         if (data.length > 0) {
-            const sql = 'DELETE FROM likes WHERE uid=? AND postid=?;';
-            const sql2 = 'UPDATE posts SET likes=likes-1 WHERE id=?;';
+            const sql = 'DELETE FROM likes WHERE uid=? AND post_id=?;';
             db.query(sql, [req.params.userId, req.params.id], (err, data, fields) => {
                 if (err) return res.status(401).json({err});
+                const sql2 = 'UPDATE posts SET likes=likes-1 WHERE id=?;';
                 db.query(sql2, [req.params.id], (err, data, fields) => {
                     if (err) return res.status(401).json({err});
                     return res.status(200).json({message: 'Post disliked !'});
                 })
             })
         } else {
-            const sql = 'INSERT INTO likes (uid, postid) VALUES (?);';
-            const sql2 = 'UPDATE posts SET likes=likes+1 WHERE id=?;';
+            const sql = 'INSERT INTO likes (uid, post_id) VALUES (?);';
             db.query(sql, [[req.params.userId, req.params.id], req.params.id], (err, data, fields) => {
                 if (err) return res.status(401).json({err});
+                const sql2 = 'UPDATE posts SET likes=likes+1 WHERE id=?;';
                 db.query(sql2, [req.params.id], (err, data, fields) => {
                     if (err) return res.status(401).json({err});
                     return res.status(200).json({message: 'Post liked !'});
