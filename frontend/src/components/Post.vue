@@ -185,6 +185,8 @@
 
     .post__avatar img {
         width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 
     .post__infos {
@@ -196,6 +198,7 @@
 
     .post__user {
         font-size: .8rem;
+        align-self: flex-start;
     }
 
     .post__date {
@@ -225,18 +228,6 @@
         padding: 1.5rem 1rem;
         border-radius: 0 0 .5rem .5rem;
         background-color: #fff;
-    }
-
-    .post__comments {
-        width: calc(100% - 1rem);
-        min-width: 20rem;
-        margin: .5rem 0;
-        padding: 0 .5rem;
-        box-shadow: 0;
-    }
-
-    .post__comments input {
-        padding: 0 .5rem;
     }
 
     .comments {

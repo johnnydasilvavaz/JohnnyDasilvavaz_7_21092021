@@ -37,5 +37,15 @@
 </script>
 
 <style>
+    .post__comments {
+        width: calc(100% - 1rem);
+        min-width: 20rem;
+        margin: .5rem .5rem;
+        padding: 0;
+        box-shadow: 0;
+    }
 
+    .post__comments input {
+        padding: 0 .5rem;
+    }
 </style>

@@ -18,14 +18,6 @@
                 <label for="email">Email </label>
                 <input type="text" id="email" :placeholder="user.email" disabled>
             </div>
-            <div class="form__item">
-                <label for="password">Nouveau mot de passe </label>
-                <input type="password" id="password" placeholder="Votre nouveau mot de passse" v-model="password">
-            </div>
-            <div class="form__item">
-                <label for="passwordConfirm">Confirmez le mot de passe </label>
-                <input type="password" id="password" placeholder="Confirmation du mot de passse" v-model="passwordConfirm">
-            </div>
             <button class="btn">Enregistrer</button>
         </form>
     </div>
@@ -41,8 +33,6 @@
             return {
                 name: '',
                 forname: '',
-                password: '',
-                passwordConfirm: '',
                 file: null,
                 header: {}
             }
@@ -56,25 +46,29 @@
                 this.file = event.target.files[0];
             },
             handleSubmit() {
-                const data = new FormData();
+                const formData = new FormData();
                 if (this.name != '') {
-                    data.append('name', this.name);
+                    formData.append('name', this.name);
                 }
                 if (this.forname != '') {
-                    data.append('forname', this.forname);
-                }
-                if (this.password != '' && this.passwordConfirm != '' && this.password == this.passwordConfirm) {
-                    data.append('password', this.password);
+                    formData.append('forname', this.forname);
                 }
                 if (this.file != null) {
-                    data.append('file', this.file);
+                    formData.append('image', this.file);
                 }
                 const config = {
                     header: {
                         'Content-Type' : 'multipart/form-data'
                     }
                 }
-                axios.put('me', data, config);
+                axios.put('me', formData, config)
+                .then((res) => {
+                    this.$store.dispatch('user', res.data.user);
+                    console.log(res);
+                })
+                .catch((error) => {
+                    return error;
+                });
             }
         }
     }
@@ -84,12 +78,14 @@
     .profile {
         display: flex;
         justify-content: center;
+        padding-top: 5rem;
     }
 
     .profile__img {
         width: 8rem;
         height: 8rem;
         border-radius: .5rem;
+        object-fit: cover;
     }
 
     .profile__form {

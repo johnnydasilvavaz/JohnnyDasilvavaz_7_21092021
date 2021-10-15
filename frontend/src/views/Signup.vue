@@ -80,6 +80,7 @@ a {
 .signup {
   display: flex;
   justify-content: center;
+  padding-top: 5rem;
 }
 
 .signup__form {

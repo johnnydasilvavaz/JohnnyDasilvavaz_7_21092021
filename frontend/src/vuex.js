@@ -22,6 +22,7 @@ const store = createStore({
     },
     actions: {
         user(context, user) {
+            console.log("user" + user);
             context.commit('user', user);
         },
         async getPosts(context) {
@@ -33,6 +34,15 @@ const store = createStore({
             .catch((error) => {
                 return error;
             })
+        },
+        async getProfile(context) {
+            await axios.get('me')
+            .then((res) => {
+                context.commit('user', res.data.user);
+            })
+            .catch((error) => {
+                return error;
+            });
         },
         token(context, token) {
             context.commit('token', token);

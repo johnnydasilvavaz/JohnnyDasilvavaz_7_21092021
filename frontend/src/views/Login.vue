@@ -1,19 +1,17 @@
 <template>
-  <div class="hello">
-    <div class="login">
-      <form class="login__form" @submit.prevent="handleSubmit">
-        <h1>Connexion</h1>
-        <div class="form__item">
-          <label for="email">Adresse email</label>
-          <input type="text" name="email" id="email" v-model="email">
-        </div>
-        <div class="form__item">
-          <label for="password">Mot de passe</label>
-          <input type="password" name="password" id="password" v-model="password">
-        </div>
-        <button class="btn">Se connecter</button>
-      </form>
-    </div>
+  <div class="login">
+    <form class="login__form" @submit.prevent="handleSubmit">
+      <h1>Connexion</h1>
+      <div class="form__item">
+        <label for="email">Adresse email</label>
+        <input type="text" name="email" id="email" v-model="email">
+      </div>
+      <div class="form__item">
+        <label for="password">Mot de passe</label>
+        <input type="password" name="password" id="password" v-model="password">
+      </div>
+      <button class="btn">Se connecter</button>
+    </form>
   </div>
 </template>
 
@@ -73,6 +71,8 @@ export default {
   .login {
     display: flex;
     justify-content: center;
+    padding-top: 5rem;
+    height: 100%;
   }
 
   .login__form {

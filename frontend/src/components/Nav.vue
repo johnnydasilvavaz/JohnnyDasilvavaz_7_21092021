@@ -40,15 +40,25 @@
 
 <style>
     #nav {
+        position: fixed;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        width: calc(100% - 2rem);
+        height: 3rem;
+        background-color: white;
+        border-bottom: .1rem solid #091F43;
     }
 
     .nav-item {
         display: flex;
         justify-content: space-between;
         align-items: center;
+    }
+
+    .nav-item a {
+        padding: 0 .25rem;
+        text-decoration: none;
     }
 
     .logo {
@@ -77,6 +87,8 @@
 
     .avatar img {
         width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 
     .nav__profile {

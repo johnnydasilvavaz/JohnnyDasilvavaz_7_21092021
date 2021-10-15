@@ -1,7 +1,7 @@
 <template>
   <div>
     <Nav />
-    <router-view />
+    <router-view class="content" />
   </div>
 </template>
 
@@ -16,6 +16,21 @@
 </script>
 
 <style>
+html {
+    font-family: "Roboto-light", Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    height: 100%;
+}
+
+.content {
+  font-family: "Roboto-light", Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -75,6 +90,7 @@ form {
   padding: 1rem;
   margin-top: 2rem;
   border-radius: .5rem;
+  background-color: white;
 }
 
 .form__item {

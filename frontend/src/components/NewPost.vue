@@ -51,10 +51,14 @@
         max-height: 8rem;
         box-sizing: border-box;
         background-color: #fff;
+        border-bottom: .1rem solid #091F43;
         border-radius: .5rem;
         margin-bottom: 3rem;
         margin-top: 2rem;
         padding: 0;
+        box-shadow:
+        0px 0px 1.3px rgba(0, 0, 0, 0.1),
+        0px 0px 10px rgba(0, 0, 0, 0.2);
         overflow: hidden;
     }
 
@@ -69,7 +73,8 @@
 
     .upost__avatar img {
         width: 100%;
-        object-fit: contain;
+        height: 100%;
+        object-fit: cover;
     }
 
     .upost textarea {

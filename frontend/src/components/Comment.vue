@@ -1,18 +1,18 @@
 <template>
     <div class="com">
-        <div class="com__header">
-            <div class="com__avatar">
-                <img :src="comAvatar" alt="">
-            </div>
+        <div class="com__avatar">
+            <img :src="comAvatar" alt="">
+        </div>
+        <div class="com__body">
             <div class="com__author">
-                {{ comAuthor }}
+                    {{ comAuthor }}
+                </div>
+            <div class="com__text">
+                {{ comText }}
             </div>
-        </div>
-        <div class="com__text">
-            {{ comText }}
-        </div>
-        <div class="com__date">
-            {{ comDate }}
+            <div class="com__date">
+                {{ comDate }}
+            </div>
         </div>
     </div>
 </template>
@@ -37,7 +37,6 @@
 <style>
     .com {
         display: flex;
-        flex-direction: column;
         width: calc(100% - 1rem);
         margin: .5rem;
         padding: .5rem;
@@ -56,6 +55,7 @@
 
     .com__avatar img {
         width: 100%;
+        height: 100%;
         object-fit: cover;
     }
 
@@ -63,7 +63,7 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        margin: .5rem;
+        width: 100%;
     }
 
     .com__header {
@@ -72,13 +72,13 @@
     }
 
     .com__author {
-        font-size: .8rem;
+        font-size: .7rem;
     }
 
     .com__text {
         font-size: .9rem;
         text-align: left;
-        padding: .25rem;
+        padding: .25rem 0;
     }
 
     .com__date {
