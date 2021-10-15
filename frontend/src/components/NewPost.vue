@@ -1,7 +1,7 @@
 <template>
     <form class="upost" @submit.prevent="handlePost">
         <div class="upost__avatar">
-            <img :src="user.avatar" alt="">
+            <router-link class="nav__name" :to="{name: 'Profile', params: {id: user.uid}}" v-if="user"><img :src="user.avatar" alt=""></router-link>
         </div>
         <div class="upost__body">
             <textarea name="post" placeholder="Ecrivez un message ici" id="post" cols="30" rows="4" v-model="text"></textarea>
@@ -78,6 +78,7 @@
     }
 
     .upost textarea {
+        font-family: roboto-medium;
         min-width: 100%;
         height: 6rem;
         resize: none;
@@ -87,6 +88,11 @@
         background-color: #efefef;
         padding: .5rem;
         margin: 0;
+    }
+
+    .upost textarea:focus {
+        outline: none;
+        border: inset 0.05rem solid #244883;
     }
 
     .upost__body {

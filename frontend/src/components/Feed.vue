@@ -1,6 +1,6 @@
 <template>
     <div class="feed">
-        <Post class="post" v-for="p in posts" :key="p" :pavatar="p.pavatar" :pdate="p.pdate" :pforname="p.pforname" :pname="p.pname" :pid="p.pid" :ptext="p.ptext" :pcom="p"/>
+        <Post class="post" v-for="p in posts" :key="p" :pavatar="p.pavatar" :pdate="p.pdate" :pforname="p.pforname" :pname="p.pname" :pid="p.pid" :ptext="p.ptext" :pcom="p" :plikes="p.plikes"/>
     </div>
 </template>
 

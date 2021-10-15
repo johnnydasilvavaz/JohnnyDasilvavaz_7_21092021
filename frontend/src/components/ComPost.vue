@@ -1,9 +1,7 @@
 <template>
     <form class="post__comments" @submit.prevent="postComment(pid)">
-        <div>
-            <input type="text" placeholder="Commenter le post" v-model="text">
-            <button class="btn">Envoyer</button>
-        </div>
+        <input type="text" placeholder="Commenter le post" v-model="text">
+        <button class="btn">Envoyer</button>
     </form>
 </template>
 
@@ -38,6 +36,7 @@
 
 <style>
     .post__comments {
+        display: flex;
         width: calc(100% - 1rem);
         min-width: 20rem;
         margin: .5rem .5rem;
@@ -47,5 +46,10 @@
 
     .post__comments input {
         padding: 0 .5rem;
+    }
+
+    .post__comments input:focus {
+        outline: none;
+        border: inset .1rem #244883;
     }
 </style>

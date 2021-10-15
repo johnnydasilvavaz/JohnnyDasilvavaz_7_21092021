@@ -39,16 +39,12 @@
         display: flex;
         width: calc(100% - 1rem);
         margin: .5rem;
-        padding: .5rem;
-        border-radius: .3rem;
-        border: .1rem solid white;
-        box-sizing: border-box;
     }
 
     .com__avatar {
         width: 1.5rem;
         height: 1.5rem;
-        border-radius: .3rem;
+        border-radius: .2rem;
         margin-right: .5rem;
         overflow: hidden;
     }
@@ -64,6 +60,10 @@
         flex-direction: column;
         align-items: flex-start;
         width: 100%;
+        padding: .25rem;
+        border-radius: .3rem;
+        border: .1rem solid white;
+        box-sizing: border-box;
     }
 
     .com__header {
@@ -82,7 +82,8 @@
     }
 
     .com__date {
+        font-family: roboto-light;
         font-size: .6rem;
-        align-self: flex-start;
+        align-self: flex-end;
     }
 </style>

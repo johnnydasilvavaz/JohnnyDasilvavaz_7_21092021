@@ -1,6 +1,7 @@
 require('dotenv').config();
 //const cryptoJS = require('crypto-js');
 const validator = require('validator');
+const fs = require('fs');
 
 exports.getProfile = (req, res, next) => {
     const sql = 'SELECT password, forname, name, avatar, uid, email FROM users WHERE uid=?;';
@@ -21,10 +22,20 @@ exports.getPosts = (req, res, next) => {
 
 exports.modify = (req, res, next) => {
     //Check if the fields are empty and with validator
-    if (req.body.name && !validator.isAlphanumeric(validator.blacklist(req.body.name.toString(), ' -'))) {
+    if ((req.body.name && !validator.isAlphanumeric(validator.blacklist(req.body.name.toString(), ' -'))) ||
+    (req.body.forname && !validator.isAlphanumeric(validator.blacklist(req.body.forname.toString(), ' -')))) {
+        if (req.file) {
+            fs.unlink(`images/${req.file.filename}`, (error => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    console.log("Image removed !");
+                }
+            }))
+        }
         return res.status(400).json({message: "A field is empty or incorrect !"});
     };
-    if (req.body.forname && !validator.isAlphanumeric(validator.blacklist(req.body.forname.toString(), ' -'))) {
+    if (!req.body.name && !req.body.forname && !req.file) {
         return res.status(400).json({message: "A field is empty or incorrect !"});
     }
 
@@ -41,6 +52,18 @@ exports.modify = (req, res, next) => {
     }
     if (req.body.forname && req.file) sql += ", ";
     if (req.file) {
+        const sqlImage = 'SELECT avatar FROM users WHERE uid=?'
+        db.query(sqlImage, req.params.userId, (err, data, fields) => {
+            if (err) return res.status(401).json({err});
+            const filename = data[0].avatar.split('/images/')[1];
+            fs.unlink(`images/${filename}`, (error => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    console.log("Image removed !");
+                }
+            }));
+        })
         sql += "avatar=?";
         sqlParams.push(`${req.protocol}://${req.get('host')}/images/${req.file.filename}`);
     }

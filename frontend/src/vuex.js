@@ -22,7 +22,6 @@ const store = createStore({
     },
     actions: {
         user(context, user) {
-            console.log("user" + user);
             context.commit('user', user);
         },
         async getPosts(context) {

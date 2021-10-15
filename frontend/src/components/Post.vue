@@ -18,7 +18,9 @@
                 </div>
                 <div class="post__header__right">
                     <div>
-                        <a class="like" href="javascript:void(0)" @click="likePost(pid)"><fa icon="heart" /></a>
+                        <span>{{ plikes }}</span>
+                        <a v-if="!liked" class="like" href="javascript:void(0)" @click="likePost(pid)"><fa icon="heart" /></a>
+                        <a v-if="liked" class="like--active" href="javascript:void(0)" @click="likePost(pid)"><fa icon="heart" /></a>
                     </div>
                     <div class="post__trash">
                         <a href="javascript:void(0)" @click="deletePost(pid)"><fa icon="trash-alt" /></a>
@@ -29,7 +31,7 @@
             </div>
         </div>
         <div v-if="pcom.com" class="comments">
-            <a href="javascript:void(0)" @click="getComments(pid)">Charger les commentaires précédents...</a>
+            <a href="javascript:void(0)" @click="getComments(pid)"><fa icon="sort-up" /> Charger les commentaires précédents <fa icon="sort-up" /></a>
             <Comment :comAvatar="pcom.com.avatar" :comAuthor="pcom.com.forname + ' ' + pcom.com.name" :comDate="pcom.com.date" :comText="pcom.com.text" />
         </div>
         <ComPost :pid="pid"/>
@@ -46,8 +48,8 @@
         name: 'Post',
         data() {
             return {
-                text: '',
-                comments: {}
+                comments: {},
+                liked: false
             }
         },
         props: {
@@ -57,7 +59,8 @@
             pdate: String,
             ptext: String,
             pavatar: String,
-            pcom: Object
+            pcom: Object,
+            plikes: Number
         },
         methods: {
             async deletePost(id) {
@@ -75,6 +78,15 @@
                 .then((res) => {
                     console.log(res.data);
                     this.comments = res.data;
+                })
+                .catch((error) => {
+                    return error;
+                });
+            },
+            async likePost(id) {
+                await axios.post('post/' + id + '/like')
+                .then((res) => {
+                    console.log(res);
                 })
                 .catch((error) => {
                     return error;
@@ -197,11 +209,13 @@
     }
 
     .post__user {
+        font-family: roboto-medium;
         font-size: .8rem;
         align-self: flex-start;
     }
 
     .post__date {
+        font-display: roboto-light;
         font-size: .6rem;
         align-self: flex-start;
     }
@@ -223,6 +237,7 @@
     }
 
     .post__text {
+        font-family: roboto-medium;
         display: flex;
         width: calc(100% - 2rem);
         padding: 1.5rem 1rem;
@@ -235,6 +250,7 @@
     }
 
     .comments a {
+        font-family: roboto-light;
         font-size: .8rem;
         text-decoration: none;
     }

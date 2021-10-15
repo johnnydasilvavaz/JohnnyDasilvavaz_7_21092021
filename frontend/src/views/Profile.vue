@@ -1,7 +1,7 @@
 <template>
     <div class="profile">
         <form class="profile__form" @submit.prevent="handleSubmit">
-            <h1>Votre profil</h1>
+            <h1>Mon profil</h1>
             <div class="form__item">
                 <img class="profile__img" :src="user.avatar" alt="">
                 <input type="file" @change="setFile">

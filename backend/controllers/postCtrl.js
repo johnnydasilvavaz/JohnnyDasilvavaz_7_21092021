@@ -80,8 +80,8 @@ exports.getComments = (req, res, next) => {
 };
 
 exports.likePost = (req, res, next) => {
-    const sqlCheck = 'SELECT * FROM likes WHERE uid=?;'
-    db.query(sqlCheck, [req.params.userId], (err, data, fields) => {
+    const sqlCheck = 'SELECT * FROM likes WHERE uid=? AND post_id=?;'
+    db.query(sqlCheck, [req.params.userId, req.params.id], (err, data, fields) => {
         if (err) return res.status(401).json({err});
         if (data.length > 0) {
             const sql = 'DELETE FROM likes WHERE uid=? AND post_id=?;';

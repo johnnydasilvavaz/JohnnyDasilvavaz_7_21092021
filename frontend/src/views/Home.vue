@@ -37,17 +37,4 @@
     align-items: center;
     
   }
-
-  body:before {
-    content: '';
-    position: fixed;
-    height: 100%;
-    width: 100%;
-    top: 0;
-    left: 0;
-    background-image: url('../assets/img/feedbg.jpg');
-    background-size: cover;
-    opacity: .2;
-    z-index: -1;
-  }
 </style>
