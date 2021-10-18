@@ -12,11 +12,11 @@
             </div>
             <div class="nav__item connected" v-else>
                 <div class="nav__profile">
-                    <router-link class="nav__name" :to="{name: 'Profile', params: {id: user.uid}}" v-if="user">{{ user.forname }} {{ user.name }}</router-link>
+                    <router-link class="nav__name" :to="{name: 'Profile', params: {id: user.uid}}">{{ user.forname }} {{ user.name }}</router-link>
                     <a class="logoff" href="javascript:void(0)" @click="handleClick"><fa icon="times-circle"/> Se déconnecter</a>
                 </div>
                 <div class="avatar">
-                    <router-link class="nav__name" :to="{name: 'Profile', params: {id: user.uid}}" v-if="user"><img :src="user.avatar" alt=""></router-link>
+                    <router-link class="nav__name" :to="{name: 'Profile', params: {id: user.uid}}"><img :src="user.avatar" alt=""></router-link>
                 </div>
             </div>
         </nav>
@@ -29,9 +29,10 @@
         name: 'Nav',
         methods: {
             handleClick() {
-                localStorage.removeItem('token');
-                this.$store.dispatch('user', null);
-                this.$router.push('/');
+                this.$store.dispatch("LOGOUT")
+                .then(() => {
+                    this.$router.push('/');
+                });
             }
         },
         computed: {

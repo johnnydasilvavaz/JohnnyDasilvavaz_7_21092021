@@ -27,6 +27,16 @@ export default {
   },
   methods: {
     async handleSubmit() {
+      this.$store.dispatch("LOGIN", {
+        email: this.email,
+        password: this.password
+      })
+      .then(() => {
+        this.$router.push('/');
+      })
+      .catch((err) => {
+        return err;
+      });
       await axios.post('auth/login', {
         email: this.email,
         password: this.password

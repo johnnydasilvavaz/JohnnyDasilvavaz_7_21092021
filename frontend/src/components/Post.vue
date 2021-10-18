@@ -4,7 +4,7 @@
             <div class="post__header">
                 <div class="post__header__left">
                     <div class="post__avatar">
-                        <img :src="pavatar" alt="">
+                        <router-link class="nav__name" :to="{name: 'Profile', params: {id: puid}}"><img :src="pavatar" alt=""></router-link>
                     </div>
                     <div class="post__infos">
                         <span class="post__user">
@@ -22,7 +22,7 @@
                         <a v-if="!liked" class="like" href="javascript:void(0)" @click="likePost(pid)"><fa icon="heart" /></a>
                         <a v-if="liked" class="like--active" href="javascript:void(0)" @click="likePost(pid)"><fa icon="heart" /></a>
                     </div>
-                    <div class="post__trash">
+                    <div v-if="puid == user.uid || user.role == 'admin'" class="post__trash">
                         <a href="javascript:void(0)" @click="deletePost(pid)"><fa icon="trash-alt" /></a>
                     </div>
                 </div>
@@ -60,7 +60,9 @@
             ptext: String,
             pavatar: String,
             pcom: Object,
-            plikes: Number
+            plikes: Number,
+            prole: String,
+            puid: String
         },
         methods: {
             async deletePost(id) {
@@ -94,7 +96,6 @@
             }
         },
         computed: {
-            ...mapGetters(['posts']),
             ...mapGetters(['user'])
         },
         components: {

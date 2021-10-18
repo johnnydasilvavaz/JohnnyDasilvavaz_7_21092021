@@ -1,6 +1,6 @@
 <template>
     <div class="profile">
-        <form class="profile__form" @submit.prevent="handleSubmit">
+        <form class="profile__form" @submit.prevent="handleSubmit" v-if="user.uid == id">
             <h1>Mon profil</h1>
             <div class="form__item">
                 <img class="profile__img" :src="user.avatar" alt="">
@@ -8,11 +8,11 @@
             </div>
             <div class="form__item">
                 <label for="forname">Prénom </label>
-                <input type="text" id="forname" :placeholder="user.forname" v-model="forname">
+                <input type="text" id="forname" :placeholder="user.forname" v-model="meforname">
             </div>
             <div class="form__item">
                 <label for="name">Nom </label>
-                <input type="text" id="name" :placeholder="user.name" v-model="name">
+                <input type="text" id="name" :placeholder="user.name" v-model="mename">
             </div>
             <div class="form__item">
                 <label for="email">Email </label>
@@ -20,6 +20,14 @@
             </div>
             <button class="btn">Enregistrer</button>
         </form>
+        <div class="profile__card" v-else>
+            <img class="profile__img" :src="avatar" alt="">
+            <div class="profile__body">
+                <span class="profile__name">{{ name }}</span>
+                <span class="profile__forname">{{ forname }}</span>
+                <span class="profile__email">{{ email }}</span>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -31,10 +39,13 @@
         name: 'Profile',
         data() {
             return {
+                avatar: '',
+                mename: '',
+                meforname: '',
                 name: '',
                 forname: '',
                 file: null,
-                header: {}
+                pageid: this.$route.id
             }
         },
         props: ['id'],
@@ -47,11 +58,11 @@
             },
             handleSubmit() {
                 const formData = new FormData();
-                if (this.name != '') {
-                    formData.append('name', this.name);
+                if (this.mename != '') {
+                    formData.append('name', this.mename);
                 }
-                if (this.forname != '') {
-                    formData.append('forname', this.forname);
+                if (this.meforname != '') {
+                    formData.append('forname', this.meforname);
                 }
                 if (this.file != null) {
                     formData.append('image', this.file);
@@ -70,6 +81,20 @@
                     return error;
                 });
             }
+        },
+        async created() {
+            if (this.$store.getters.user.uid != this.$route.params.id) {
+                axios.get('me/' + this.$route.params.id)
+                .then((res) => {
+                    this.name = res.data[0].name;
+                    this.forname = res.data[0].forname;
+                    this.email = res.data[0].email;
+                    this.avatar = res.data[0].avatar;
+                })
+                .catch((error) => {
+                    return error;
+                });
+            }
         }
     }
 </script>
@@ -81,11 +106,49 @@
         padding-top: 5rem;
     }
 
+    .profile__card {
+        display: flex;
+        min-width: 30rem;
+        max-width: 30rem;
+        margin-top: 2rem;
+        padding: .5rem;
+        background-color: white;
+        border-radius: .5rem;
+        box-shadow:
+        0px 2.3px 3.6px rgba(0, 0, 0, 0.024),
+        0px 6.3px 10px rgba(0, 0, 0, 0.035),
+        0px 15.1px 24.1px rgba(0, 0, 0, 0.046),
+        0px 50px 80px rgba(0, 0, 0, 0.07);
+    }
+
     .profile__img {
         width: 8rem;
         height: 8rem;
         border-radius: .5rem;
         object-fit: cover;
+    }
+
+    .profile__body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .profile__name {
+        font-family: roboto-medium;
+        font-size: 1.5rem;
+        padding-bottom: .25rem;
+    }
+
+    .profile__forname {
+        font-family: roboto;
+        font-size: 1.5rem;
+        padding-bottom: .25rem;
+    }
+
+    .profile__email {
+        font-family: roboto-light;
     }
 
     .profile__form {

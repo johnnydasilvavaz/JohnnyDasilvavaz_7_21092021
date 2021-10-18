@@ -4,8 +4,8 @@ const validator = require('validator');
 const fs = require('fs');
 
 exports.getProfile = (req, res, next) => {
-    const sql = 'SELECT password, forname, name, avatar, uid, email FROM users WHERE uid=?;';
-    db.query(sql, req.params.userId, (err, data, fields) => {
+    const sql = 'SELECT forname, name, avatar, uid, email FROM users WHERE uid=?;';
+    db.query(sql, req.params.id, (err, data, fields) => {
         if (err) return res.status(404).json({err});
         console.log(data);
         return res.status(200).json(data);
@@ -56,13 +56,15 @@ exports.modify = (req, res, next) => {
         db.query(sqlImage, req.params.userId, (err, data, fields) => {
             if (err) return res.status(401).json({err});
             const filename = data[0].avatar.split('/images/')[1];
-            fs.unlink(`images/${filename}`, (error => {
-                if (error) {
-                    console.log(error);
-                } else {
-                    console.log("Image removed !");
-                }
-            }));
+            if (filename != "avatar.png") {
+                fs.unlink(`images/${filename}`, (error => {
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        console.log("Image removed !");
+                    }
+                }));
+            }
         })
         sql += "avatar=?";
         sqlParams.push(`${req.protocol}://${req.get('host')}/images/${req.file.filename}`);

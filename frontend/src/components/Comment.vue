@@ -5,7 +5,7 @@
         </div>
         <div class="com__body">
             <div class="com__author">
-                    {{ comAuthor }}
+                    {{ comAuthor }} :
                 </div>
             <div class="com__text">
                 {{ comText }}

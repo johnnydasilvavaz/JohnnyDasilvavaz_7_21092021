@@ -55,10 +55,16 @@ exports.modifyPost = (req, res, next) => {
 };
 
 exports.deletePost = (req, res, next) => {
-    const sql = 'DELETE FROM posts WHERE posts.id=? ;';
-    db.query(sql, [req.params.id], (err, data, fields) => {
-        if (err) return res.status(401).json({err});
-        return res.status(200).json({message: 'Post removed !'})
+    const sqlUser = 'SELECT uid FROM posts WHERE posts.id=?'
+    db.query(sqlUser, req.params.id, (err, data, fields) => {
+        if (err) return res.status(404).json({err});
+        if (req.params.userId == data[0].uid) {
+            const sql = 'DELETE FROM posts WHERE posts.id=? ;';
+            db.query(sql, [req.params.id], (err, data, fields) => {
+                if (err) return res.status(401).json({err});
+                return res.status(200).json({message: 'Post removed !'})
+            })
+        }
     })
 };
 
