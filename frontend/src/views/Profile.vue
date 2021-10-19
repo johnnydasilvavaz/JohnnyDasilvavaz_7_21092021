@@ -1,5 +1,6 @@
 <template>
     <div class="profile">
+        <Modal v-if="showModal" @close="showModal = false"/>
         <form class="profile__form" @submit.prevent="handleSubmit" v-if="user.uid == id">
             <h1>Mon profil</h1>
             <div class="form__item">
@@ -18,7 +19,7 @@
                 <label for="email">Email </label>
                 <input type="text" id="email" :placeholder="user.email" disabled>
             </div>
-            <button class="btn btn--remove"><fa icon="trash-alt" /> Supprimer mon compte</button>
+            <button class="btn btn--remove" @click.prevent="showModal = true"><fa icon="trash-alt" /> Supprimer mon compte</button>
             <button class="btn"><fa icon="save" /> Enregistrer</button>
         </form>
         <div class="profile__card" v-else>
@@ -35,6 +36,7 @@
 <script>
     import { mapGetters } from 'vuex'
     import axios from 'axios'
+    import Modal from '../components/Modal.vue'
 
     export default {
         name: 'Profile',
@@ -46,8 +48,12 @@
                 name: '',
                 forname: '',
                 file: null,
-                pageid: this.$route.id
+                pageid: this.$route.id,
+                showModal: false
             }
+        },
+        components : {
+            Modal
         },
         props: ['id'],
         computed: {
@@ -77,6 +83,15 @@
                 .then((res) => {
                     this.$store.dispatch('user', res.data.user);
                     console.log(res);
+                })
+                .catch((error) => {
+                    return error;
+                });
+            },
+            async removeProfile(password) {
+                await axios.delete('me', password)
+                .then((res) => {
+                    return res.status(200).json({message: 'Profil supprimé !'})
                 })
                 .catch((error) => {
                     return error;

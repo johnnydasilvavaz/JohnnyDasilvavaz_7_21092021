@@ -4,12 +4,11 @@
             <router-link class="nav__name" :to="{name: 'Profile', params: {id: user.uid}}"><img :src="user.avatar" alt=""></router-link>
         </div>
         <div class="upost__body">
-            <textarea name="post" placeholder="Ecrivez un message ici" id="post" cols="20" rows="3" v-model="text"></textarea>
+            <textarea name="post" placeholder="Ecrivez un message ici" id="post" cols="20" rows="3" v-model="text" @change="toggleBtn"></textarea>
             <div class="upost__actions">
                 <label class="btn btn--img" for="fileInput"><fa icon="images"/></label>
                 <input id="fileInput" type="file"  @change="setFile">
-                <button v-if="text != '' || file" class="btn btn--submit">Envoyer</button>
-                <button v-if="text == '' && !file" class="btn btn--submit btn--disabled" disabled>Envoyer</button>
+                <button class="btn btn--submit" :disabled='btnDisabled'>Envoyer</button>
             </div>
         </div>
     </form>
@@ -24,12 +23,22 @@
         data() {
             return {
                 text: '',
-                file: null
+                file: null,
+                btnDisabled: true
             }
         },
         methods: {
             setFile(event) {
                 this.file = event.target.files[0];
+                this.toggleBtn();
+            },
+            toggleBtn() {
+                if (this.file || (this.text != '')) {
+                    this.btnDisabled = false;
+                    console.log(this.btnDisabled);
+                } else {
+                    this.btnDisabled = true;
+                }
             },
             async handlePost() {
                 const formData = new FormData();
@@ -48,6 +57,7 @@
                 .then((res) => {
                     this.text = '';
                     this.file = null;
+                    this.btnDisabled = true
                     this.$store.dispatch('getPosts');
                     console.log(res);
                 })
@@ -56,8 +66,13 @@
                 });
             }
         },
+        components: {
+        },
         computed: {
-            ...mapGetters(['user'])
+            ...mapGetters(['user']),
+            disableBtn() {
+                return !this.btnDisabled;
+            }
         }
     }
 </script>
@@ -140,11 +155,11 @@
         background-color: #244883;
     }
 
-    .btn--disabled {
+    .btn:disabled {
         background-color: #244883;
     }
 
-    .btn--disabled:hover {
+    .btn:disabled:hover {
         cursor: default;
     }
 
