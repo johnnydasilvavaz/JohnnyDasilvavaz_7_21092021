@@ -3,7 +3,7 @@
     <h3 v-if="!user">Vous n'êtes pas connecté !</h3>
     <div class="feed-container" v-if="user">
       <NewPost />
-      <Post class="post" v-for="p in posts" :key="p" :pavatar="p.pavatar" :pdate="p.pdate" :pforname="p.pforname" :pname="p.pname" :pid="p.pid" :ptext="p.ptext" :pcom="p" :plikes="p.plikes" :prole="p.prole" :puid="p.puid"/>
+      <Post class="post" v-for="p in posts" :key="p" :pavatar="p.pavatar" :pdate="p.pdate" :pforname="p.pforname" :pname="p.pname" :pid="p.pid" :ptext="p.ptext" :pcom="p" :plikes="p.plikes" :prole="p.prole" :puid="p.puid" :pimg="p.pimgUrl"/>
     </div>
   </div>
 </template>

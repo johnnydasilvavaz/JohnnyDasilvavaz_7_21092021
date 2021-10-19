@@ -113,6 +113,14 @@ body {
   cursor: pointer;
 }
 
+.btn--remove {
+  background-color: darkred;
+}
+
+.btn--remove:hover {
+  background-color: #D1515A;
+}
+
 input {
   border-radius: .3rem;
   background-color: #efefef;

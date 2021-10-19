@@ -27,7 +27,8 @@
                     </div>
                 </div>
             </div>
-            <div class="post__text" v-html="ptext">
+            <img class="post__img" v-if="pimg" :src="pimg" alt="">
+            <div class="post__text" v-if="ptext" v-html="ptext">
             </div>
         </div>
         <div v-if="pcom.com" class="comments">
@@ -62,7 +63,8 @@
             pcom: Object,
             plikes: Number,
             prole: String,
-            puid: String
+            puid: String,
+            pimg: String
         },
         methods: {
             async deletePost(id) {
@@ -235,6 +237,12 @@
     .post__trash a:hover {
         cursor: pointer;
         color: #D1515A;
+    }
+
+    .post__img {
+        max-height: 20rem;
+        object-fit: contain;
+        background-color: black;
     }
 
     .post__text {

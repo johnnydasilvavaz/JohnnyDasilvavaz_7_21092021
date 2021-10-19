@@ -1,5 +1,5 @@
 require('dotenv').config();
-//const cryptoJS = require('crypto-js');
+const cryptoJS = require('crypto-js');
 const validator = require('validator');
 const fs = require('fs');
 
@@ -7,7 +7,6 @@ exports.getProfile = (req, res, next) => {
     const sql = 'SELECT forname, name, avatar, uid, email FROM users WHERE uid=?;';
     db.query(sql, req.params.id, (err, data, fields) => {
         if (err) return res.status(404).json({err});
-        console.log(data);
         return res.status(200).json(data);
     });
 }
@@ -86,8 +85,8 @@ exports.modify = (req, res, next) => {
 }
 
 exports.delete = (req, res, next) => {
-    const sql = 'DELETE FROM users WHERE uid=?;';
-    db.query(sql, req.params.userId, (err, data, fields) => {
+    const sql = 'DELETE FROM users WHERE uid=? AND password=?;';
+    db.query(sql, [req.params.userId, req.body.password], (err, data, fields) => {
         if(err) return res.status(400).json({err});
         return res.status(200).json({message: "User deleted !"});
     });

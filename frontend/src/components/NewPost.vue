@@ -7,9 +7,9 @@
             <textarea name="post" placeholder="Ecrivez un message ici" id="post" cols="20" rows="3" v-model="text"></textarea>
             <div class="upost__actions">
                 <label class="btn btn--img" for="fileInput"><fa icon="images"/></label>
-                <input id="fileInput" type="file"  @click="handleImage">
-                <button v-if="text != ''" class="btn btn--submit">Envoyer</button>
-                <button v-if="text == ''" class="btn btn--submit btn--disabled" disabled>Envoyer</button>
+                <input id="fileInput" type="file"  @change="setFile">
+                <button v-if="text != '' || file" class="btn btn--submit">Envoyer</button>
+                <button v-if="text == '' && !file" class="btn btn--submit btn--disabled" disabled>Envoyer</button>
             </div>
         </div>
     </form>
@@ -23,18 +23,37 @@
         name: 'NewPost',
         data() {
             return {
-                text: ''
+                text: '',
+                file: null
             }
         },
         methods: {
+            setFile(event) {
+                this.file = event.target.files[0];
+            },
             async handlePost() {
-                await axios.post('post', {text: this.text})
+                const formData = new FormData();
+                if (this.text != '') {
+                    formData.append('text', this.text);
+                }
+                if (this.file != null) {
+                    formData.append('image', this.file);
+                }
+                const config = {
+                    header: {
+                        'Content-Type' : 'multipart/form-data'
+                    }
+                }
+                await axios.post('post', formData, config)
                 .then((res) => {
-                    console.log(res);
                     this.text = '';
+                    this.file = null;
                     this.$store.dispatch('getPosts');
+                    console.log(res);
                 })
-                .catch();
+                .catch((error) => {
+                    return error;
+                });
             }
         },
         computed: {

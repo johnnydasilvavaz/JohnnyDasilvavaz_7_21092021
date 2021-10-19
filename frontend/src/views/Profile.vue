@@ -18,7 +18,8 @@
                 <label for="email">Email </label>
                 <input type="text" id="email" :placeholder="user.email" disabled>
             </div>
-            <button class="btn">Enregistrer</button>
+            <button class="btn btn--remove"><fa icon="trash-alt" /> Supprimer mon compte</button>
+            <button class="btn"><fa icon="save" /> Enregistrer</button>
         </form>
         <div class="profile__card" v-else>
             <img class="profile__img" :src="avatar" alt="">
@@ -56,7 +57,7 @@
             setFile(event) {
                 this.file = event.target.files[0];
             },
-            handleSubmit() {
+            async handleSubmit() {
                 const formData = new FormData();
                 if (this.mename != '') {
                     formData.append('name', this.mename);
@@ -72,7 +73,7 @@
                         'Content-Type' : 'multipart/form-data'
                     }
                 }
-                axios.put('me', formData, config)
+                await axios.put('me', formData, config)
                 .then((res) => {
                     this.$store.dispatch('user', res.data.user);
                     console.log(res);

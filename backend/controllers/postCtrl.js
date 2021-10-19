@@ -1,4 +1,5 @@
 const validator = require('validator');
+const fs = require('fs');
 
 exports.getOnePost = (req, res, next) => {
     const sql = 'SELECT text FROM posts WHERE id=?;';
@@ -40,7 +41,10 @@ exports.createPost = (req, res, next) => {
         img = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
     };
     const userId = req.params.userId;
-    const text = validator.escape(req.body.text);
+    let text = '';
+    if (req.body.text) {
+        text = validator.escape(req.body.text);
+    }
     const post = [userId, text, 0, img];
     //create DB query
     const sql = 'INSERT INTO posts (uid, text, likes, imgUrl) VALUES (?);';
@@ -55,16 +59,34 @@ exports.modifyPost = (req, res, next) => {
 };
 
 exports.deletePost = (req, res, next) => {
-    const sqlUser = 'SELECT uid FROM posts WHERE posts.id=?'
-    db.query(sqlUser, req.params.id, (err, data, fields) => {
+    const sqlAdmin = 'SELECT role FROM users WHERE uid=?';
+    db.query(sqlAdmin, req.params.userId, (err, data, fields) => {
         if (err) return res.status(404).json({err});
-        if (req.params.userId == data[0].uid) {
-            const sql = 'DELETE FROM posts WHERE posts.id=? ;';
-            db.query(sql, [req.params.id], (err, data, fields) => {
-                if (err) return res.status(401).json({err});
-                return res.status(200).json({message: 'Post removed !'})
-            })
-        }
+        const role = data[0].role;
+        const sqlPost = 'SELECT uid, imgUrl FROM posts WHERE posts.id=?'
+        db.query(sqlPost, req.params.id, (err, data, fields) => {
+            if (err) return res.status(404).json({err});
+            let filename;
+            if (data[0].imgUrl) {
+                filename = data[0].imgUrl.split('/images/')[1];
+            }
+            if (req.params.userId == data[0].uid || role == "admin") {
+                const sql = 'DELETE FROM posts WHERE posts.id=? ;';
+                db.query(sql, [req.params.id], (err, data, fields) => {
+                    if (err) return res.status(401).json({err});
+                    if (filename) {
+                        fs.unlink(`images/${filename}`, (error => {
+                            if (error) {
+                                console.log(error);
+                            } else {
+                                console.log("Image removed !");
+                            }
+                        }));
+                    }
+                    return res.status(200).json({message: 'Post removed !'})
+                })
+            }
+        })
     })
 };
 
