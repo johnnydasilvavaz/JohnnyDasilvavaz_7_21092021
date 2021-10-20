@@ -50,6 +50,7 @@
         flex-direction: column;
         background-color: white;
         border-radius: .5rem;
+        border-bottom: .1rem solid #091F43;
         padding: .5rem;
         max-width: 30rem;
     }

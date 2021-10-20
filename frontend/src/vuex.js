@@ -67,6 +67,15 @@ const store = createStore({
                 return error;
             })
         },
+        async getPersonalPosts(context, id) {
+            await axios.get('me/posts/' + id)
+            .then((res) => {
+                context.commit('posts', res.data);
+            })
+            .catch((error) => {
+                return error;
+            });
+        },
         async getProfile(context) {
             await axios.get('me')
             .then((res) => {

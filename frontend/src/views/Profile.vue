@@ -9,18 +9,18 @@
             </div>
             <div class="form__item">
                 <label for="forname">Prénom </label>
-                <input type="text" id="forname" :placeholder="user.forname" v-model="meforname">
+                <input type="text" id="forname" :placeholder="user.forname" v-model="forname" @input="toggleBtn">
             </div>
             <div class="form__item">
                 <label for="name">Nom </label>
-                <input type="text" id="name" :placeholder="user.name" v-model="mename">
+                <input type="text" id="name" :placeholder="user.name" v-model="name" @input="toggleBtn">
             </div>
             <div class="form__item">
                 <label for="email">Email </label>
                 <input type="text" id="email" :placeholder="user.email" disabled>
             </div>
             <button class="btn btn--remove" @click.prevent="showModal = true"><fa icon="trash-alt" /> Supprimer mon compte</button>
-            <button class="btn"><fa icon="save" /> Enregistrer</button>
+            <button class="btn" :disabled="btnDisabled"><fa icon="save" /> Enregistrer</button>
         </form>
         <div class="profile__card" v-else>
             <img class="profile__img" :src="avatar" alt="">
@@ -30,6 +30,9 @@
                 <span class="profile__email">{{ email }}</span>
             </div>
         </div>
+        <div class="posts">
+            <Post class="post" v-for="p in posts" :key="p" :pavatar="p.pavatar" :pdate="p.pdate" :pforname="p.pforname" :pname="p.pname" :pid="p.pid" :ptext="p.ptext" :pcom="p" :plikes="p.plikes" :prole="p.prole" :puid="p.puid" :pimg="p.pimgUrl"/>
+        </div>
     </div>
 </template>
 
@@ -37,39 +40,49 @@
     import { mapGetters } from 'vuex'
     import axios from 'axios'
     import Modal from '../components/Modal.vue'
+    import Post from '../components/Post.vue'
 
     export default {
         name: 'Profile',
         data() {
             return {
                 avatar: '',
-                mename: '',
-                meforname: '',
                 name: '',
                 forname: '',
                 file: null,
                 pageid: this.$route.id,
-                showModal: false
+                showModal: false,
+                btnDisabled: true
             }
         },
         components : {
-            Modal
+            Modal,
+            Post
         },
         props: ['id'],
         computed: {
-            ...mapGetters(['user'])
+            ...mapGetters(['user']),
+            ...mapGetters(['posts'])
         },
         methods: {
             setFile(event) {
                 this.file = event.target.files[0];
+                this.toggleBtn()
+            },
+            toggleBtn() {
+                if (this.file || (this.name != '' && this.name != this.user.name) || (this.forname != '' && this.forname != this.user.forname)) {
+                    this.btnDisabled = false;
+                } else {
+                    this.btnDisabled = true;
+                }
             },
             async handleSubmit() {
                 const formData = new FormData();
                 if (this.mename != '') {
-                    formData.append('name', this.mename);
+                    formData.append('name', this.name);
                 }
                 if (this.meforname != '') {
-                    formData.append('forname', this.meforname);
+                    formData.append('forname', this.forname);
                 }
                 if (this.file != null) {
                     formData.append('image', this.file);
@@ -111,6 +124,7 @@
                     return error;
                 });
             }
+            this.$store.dispatch('getPersonalPosts', this.$route.params.id);
         }
     }
 </script>
@@ -118,7 +132,9 @@
 <style>
     .profile {
         display: flex;
+        flex-direction: column;
         justify-content: center;
+        align-items: center;
         padding-top: 5rem;
     }
 
@@ -128,8 +144,10 @@
         max-width: 30rem;
         margin-top: 2rem;
         padding: .5rem;
+        margin-bottom: 3rem;
         background-color: white;
         border-radius: .5rem;
+        border-bottom: .1rem solid #091F43;
         box-shadow:
         0px 2.3px 3.6px rgba(0, 0, 0, 0.024),
         0px 6.3px 10px rgba(0, 0, 0, 0.035),
@@ -169,6 +187,7 @@
 
     .profile__form {
         border-bottom: .1rem solid #091F43;
+        margin-bottom: 3rem;
         box-shadow:
         0px 2.3px 3.6px rgba(0, 0, 0, 0.024),
         0px 6.3px 10px rgba(0, 0, 0, 0.035),

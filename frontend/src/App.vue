@@ -1,7 +1,7 @@
 <template>
   <div>
     <Nav />
-    <router-view class="content" />
+    <router-view class="content" :key="$route.fullPath" />
   </div>
 </template>
 
@@ -37,11 +37,11 @@
 }
 
 html {
-    font-family: "roboto", Arial, Helvetica, sans-serif;
-    font-size: 16px;
-    scroll-behavior: smooth;
-    scroll-padding-top: 5rem;
-    height: 100%;
+  font-family: "roboto", Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  height: 100%;
 }
 
 body:before {
@@ -59,9 +59,9 @@ body:before {
 
 .content {
   font-family: "roboto", Arial, Helvetica, sans-serif;
-    font-size: 16px;
-    scroll-behavior: smooth;
-    scroll-padding-top: 5rem;
+  font-size: 16px;
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
 }
 
 body {
@@ -73,7 +73,6 @@ body {
   font-family: roboto, Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
 }
 

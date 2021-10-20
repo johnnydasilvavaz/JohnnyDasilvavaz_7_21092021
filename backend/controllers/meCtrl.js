@@ -1,5 +1,5 @@
 require('dotenv').config();
-const cryptoJS = require('crypto-js');
+//const cryptoJS = require('crypto-js');
 const validator = require('validator');
 const fs = require('fs');
 
@@ -12,10 +12,24 @@ exports.getProfile = (req, res, next) => {
 }
 
 exports.getPosts = (req, res, next) => {
-    const sql = 'SELECT * FROM posts WHERE uid=?;';
-    db.query(sql, req.params.userId, (err, data, fields) => {
-        if (err) return res.status(404).json({err});
-        return res.status(200).json({});
+    const sql = 'SELECT posts.id AS pid, posts.uid AS puid, posts.date AS pdate, posts.text AS ptext, posts.imgUrl AS pimgUrl, posts.likes AS plikes, name AS pname, forname AS pforname, avatar AS pavatar FROM posts INNER JOIN users ON posts.uid=users.uid WHERE posts.uid=? ORDER BY date DESC;';
+    db.query(sql, req.params.id, (err, data, fields) => {
+        if (err) return res.status(401).json({err});
+        const posts = {...data};
+        const sql2 = 'SELECT comments.*, name, forname, avatar FROM comments INNER JOIN users ON comments.uid=users.uid ORDER BY date DESC;';
+        db.query(sql2, (err, data, fields) => {
+            if (err) return res.status(403).json({err});
+            const coms = {...data};
+            if (!coms) return res.status(200).json({...posts});
+            for (let c in coms) {
+                for (let p in posts) {
+                    if (posts[p].pid == coms[c].post_id && !posts[p].com) {
+                        posts[p] = {...posts[p], com: {...coms[c]}};
+                    }
+                }
+            }
+            return res.status(200).json({...posts});
+        })
     });
 }
 

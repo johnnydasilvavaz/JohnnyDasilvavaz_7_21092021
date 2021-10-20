@@ -1,7 +1,7 @@
 <template>
     <div class="com">
         <div class="com__avatar">
-            <img :src="comAvatar" alt="">
+            <router-link class="nav__name" :to="{name: 'Profile', params: {id: comUid}}"><img :src="comAvatar" alt=""></router-link>
         </div>
         <div class="com__body">
             <div class="com__author">
@@ -29,7 +29,8 @@
             comText: String,
             comAuthor: String,
             comDate: String,
-            comAvatar: String
+            comAvatar: String,
+            comUid: String
         }
     }
 </script>

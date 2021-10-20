@@ -1,7 +1,7 @@
 <template>
     <form class="post__comments" @submit.prevent="postComment(pid)">
-        <input type="text" placeholder="Commenter le post" v-model="text">
-        <button class="btn">Envoyer</button>
+        <input type="text" placeholder="Commentez la publication" v-model="text" @input="toggleBtn">
+        <button class="btn" :disabled="btnDisabled">Envoyer</button>
     </form>
 </template>
 
@@ -12,7 +12,8 @@
         name: 'ComPost',
         data() {
             return {
-                text: ''
+                text: '',
+                btnDisabled: true
             }
         },
         props: {
@@ -29,6 +30,13 @@
                 .catch((error) => {
                     return error;
                 });
+            },
+            toggleBtn() {
+                if (this.text != '') {
+                    this.btnDisabled = false;
+                } else {
+                    this.btnDisabled = true;
+                }
             }
         }
     }
@@ -49,7 +57,7 @@
     }
 
     .post__comments input:focus {
-        outline: none;
-        border: inset .1rem #244883;
+        outline-offset: -.08rem;
+        outline-color: #244883;
     }
 </style>

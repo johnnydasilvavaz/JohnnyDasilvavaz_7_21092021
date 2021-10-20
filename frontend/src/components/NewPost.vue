@@ -4,7 +4,7 @@
             <router-link class="nav__name" :to="{name: 'Profile', params: {id: user.uid}}"><img :src="user.avatar" alt=""></router-link>
         </div>
         <div class="upost__body">
-            <textarea name="post" placeholder="Ecrivez un message ici" id="post" cols="20" rows="3" v-model="text" @change="toggleBtn"></textarea>
+            <textarea name="post" placeholder="Ecrivez un message ici" id="post" cols="20" rows="3" v-model="text" @input="toggleBtn"></textarea>
             <div class="upost__actions">
                 <label class="btn btn--img" for="fileInput"><fa icon="images"/></label>
                 <input id="fileInput" type="file"  @change="setFile">
@@ -35,7 +35,6 @@
             toggleBtn() {
                 if (this.file || (this.text != '')) {
                     this.btnDisabled = false;
-                    console.log(this.btnDisabled);
                 } else {
                     this.btnDisabled = true;
                 }
@@ -70,9 +69,6 @@
         },
         computed: {
             ...mapGetters(['user']),
-            disableBtn() {
-                return !this.btnDisabled;
-            }
         }
     }
 </script>
@@ -85,7 +81,6 @@
         max-height: 8rem;
         box-sizing: border-box;
         background-color: #fff;
-        border-bottom: .1rem solid #091F43;
         border-radius: .5rem;
         margin-bottom: 3rem;
         margin-top: 2rem;
@@ -126,7 +121,7 @@
 
     .upost textarea:focus {
         background-color: transparent;
-        outline-offset: -.1rem;
+        outline-offset: -.08rem;
     }
 
     .upost__body {
