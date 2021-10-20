@@ -100,12 +100,31 @@ exports.createComment = (req, res, next) => {
 };
 
 exports.getComments = (req, res, next) => {
-    const sql = 'SELECT comments.*, users.name, users.forname, users.avatar FROM comments LEFT JOIN users ON comments.uid=users.uid WHERE post_id=?;';
+    const sql = 'SELECT comments.*, users.name, users.forname, users.avatar FROM comments LEFT JOIN users ON comments.uid=users.uid WHERE post_id=? ORDER BY comments.date;';
     db.query(sql, [req.params.id], (err, data, fields) => {
         if (err) return res.status(401).json({err});
         return res.status(200).json({...data});
     });
 };
+
+exports.deleteComment = (req, res, next) => {
+    const sqlAdmin = 'SELECT role FROM users WHERE uid=?';
+    db.query(sqlAdmin, req.params.userId, (err, data, fields) => {
+        if (err) return res.status(404).json({err});
+        const role = data[0].role;
+        const sqlPost = 'SELECT uid FROM comments WHERE id=?'
+        db.query(sqlPost, req.params.id, (err, data, fields) => {
+            if (err) return res.status(404).json({err});
+            if (req.params.userId == data[0].uid || role == "admin") {
+                const sql = 'DELETE FROM comments WHERE id=? ;';
+                db.query(sql, [req.params.id], (err, data, fields) => {
+                    if (err) return res.status(401).json({err});
+                    return res.status(200).json({message: 'Comment removed !'})
+                })
+            }
+        })
+    })
+}
 
 exports.likePost = (req, res, next) => {
     const sqlCheck = 'SELECT * FROM likes WHERE uid=? AND post_id=?;'

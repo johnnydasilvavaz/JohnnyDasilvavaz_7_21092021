@@ -19,8 +19,10 @@
                 <label for="email">Email </label>
                 <input type="text" id="email" :placeholder="user.email" disabled>
             </div>
-            <button class="btn btn--remove" @click.prevent="showModal = true"><fa icon="trash-alt" /> Supprimer mon compte</button>
-            <button class="btn" :disabled="btnDisabled"><fa icon="save" /> Enregistrer</button>
+            <div class="form__item">
+                <button class="btn btn--remove" @click.prevent="showModal = true"><fa icon="trash-alt" /> Supprimer mon compte</button>
+                <button class="btn" :disabled="btnDisabled"><fa icon="save" /> Enregistrer</button>
+            </div>
         </form>
         <div class="profile__card" v-else>
             <img class="profile__img" :src="avatar" alt="">
@@ -143,7 +145,6 @@
         min-width: 30rem;
         max-width: 30rem;
         margin-top: 2rem;
-        padding: .5rem;
         margin-bottom: 3rem;
         background-color: white;
         border-radius: .5rem;
@@ -158,7 +159,8 @@
     .profile__img {
         width: 8rem;
         height: 8rem;
-        border-radius: .5rem;
+        margin: .5rem;
+        border-radius: .3rem;
         object-fit: cover;
     }
 
@@ -166,6 +168,7 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
+        align-items: center;
         width: 100%;
     }
 
@@ -186,8 +189,14 @@
     }
 
     .profile__form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         border-bottom: .1rem solid #091F43;
         margin-bottom: 3rem;
+        max-width: 30rem;
+        min-width: 30rem;
+        padding: 0;
         box-shadow:
         0px 2.3px 3.6px rgba(0, 0, 0, 0.024),
         0px 6.3px 10px rgba(0, 0, 0, 0.035),

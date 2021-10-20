@@ -33,7 +33,7 @@
         </div>
         <div v-if="pcom.com" class="comments">
             <a href="javascript:void(0)" @click="getComments(pid)"><fa icon="sort-up" /> Charger les commentaires précédents <fa icon="sort-up" /></a>
-            <Comment :comAvatar="pcom.com.avatar" :comAuthor="pcom.com.forname + ' ' + pcom.com.name" :comDate="pcom.com.date" :comText="pcom.com.text" :comUid="pcom.com.uid" />
+            <Comment v-for="com in comments" :key="com" :comAvatar="com.avatar" :comAuthor="com.forname + ' ' + com.name" :comDate="com.date" :comText="com.text" :comUid="com.uid" :comId="com.id" />
         </div>
         <ComPost :pid="pid"/>
     </div>
@@ -49,8 +49,9 @@
         name: 'Post',
         data() {
             return {
-                comments: {},
-                liked: false
+                comments: [],
+                liked: false,
+                someComs: false
             }
         },
         props: {
@@ -270,6 +271,9 @@
 
     .comments {
         width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     .comments a {

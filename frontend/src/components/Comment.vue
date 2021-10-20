@@ -5,8 +5,11 @@
         </div>
         <div class="com__body">
             <div class="com__author">
+                <div>
                     {{ comAuthor }} :
                 </div>
+                <a href="javascript:void(0)" @click="deleteCom(comId)"><fa icon="trash-alt" /></a>
+            </div>
             <div class="com__text">
                 {{ comText }}
             </div>
@@ -22,7 +25,7 @@
         name: 'Comment',
         data() {
             return {
-                
+                comments: []
             }
         },
         props: {
@@ -30,7 +33,8 @@
             comAuthor: String,
             comDate: String,
             comAvatar: String,
-            comUid: String
+            comUid: String,
+            comId: Number
         }
     }
 </script>
@@ -73,7 +77,10 @@
     }
 
     .com__author {
+        display: flex;
+        justify-content: space-between;
         font-size: .7rem;
+        width: 100%;
     }
 
     .com__text {
