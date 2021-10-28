@@ -1,4 +1,5 @@
 <template>
+    <div class="navcontainer">
         <nav class="nav">
             <div class="nav__item nav__item--left">
                 <router-link to="/"><img class="logo" alt="Vue logo" src="../assets/img/icon.png">Groupomania</router-link>
@@ -20,6 +21,7 @@
                 </div>
             </div>
         </nav>
+    </div>
 </template>
 
 <script>
@@ -40,14 +42,13 @@
 </script>
 
 <style lang="scss" scoped>
-    .nav {
+    .navcontainer {
         position: fixed;
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
-        width: calc(100% - 2rem);
-        height: 3rem;
-        padding: .5rem 1rem;
+        height: 3.5rem;
+        width: 100%;
         background-color: white;
         border-bottom: .1rem solid #091F43;
         box-shadow:
@@ -56,6 +57,14 @@
         0px 0px 9px rgba(0, 0, 0, 0.137),
         0px 0px 30px rgba(0, 0, 0, 0.14);
         overflow: hidden;
+    }
+
+    .nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 73rem;
+        padding: .5rem 1rem;
         &__item {
             display: flex;
             justify-content: space-between;

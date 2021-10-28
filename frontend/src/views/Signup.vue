@@ -23,6 +23,7 @@
         <input type="password" name="passwordConfirm" id="passwordConfirm" v-model="passwordConfirm">
       </div>
       <button class="btn">Créer mon compte</button>
+      <Error v-if="error" :error="error" />
     </form>
   </div>
 </template>
@@ -37,24 +38,28 @@ export default {
           name: '',
           email: '',
           password: '',
-          passwordConfirm: ''
+          passwordConfirm: '',
+          error: ''
       }
   },
   methods: {
-    async handleSubmit() {
+    handleSubmit() {
       if (this.passwordConfirm != this.password) {
-        return console.log('Password and confirmation are not identical');
+        this.error = 'Le mot de passe et la confirmation ne sont pas identiques';
+        return;
       }
-      const response = await axios.post('auth/signup', {
+      axios.post('auth/signup', {
       forname: this.forname,
       name: this.name,
       email: this.email,
       password: this.password
-      });
-
-      console.log(response);
-
-      this.$router.push('/Login');
+      })
+      .then(() => {
+        this.$router.push('/Login');
+      })
+      .catch(() => {
+        this.error = 'Les informations fournies sont incomplètes/incorrectes'
+      })
     }
   }
 }

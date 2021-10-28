@@ -11,17 +11,22 @@
         <input type="password" name="password" id="password" v-model="password">
       </div>
       <button class="btn">Se connecter</button>
+      <Error v-if="error" :error="error" />
     </form>
   </div>
 </template>
 
 <script>
+import Error from '../components/Error.vue';
+
 export default {
+  components: { Error },
   name: 'Login',
   data() {
     return {
       email: '',
-      password: ''
+      password: '',
+      error: ''
     }
   },
   methods: {
@@ -34,8 +39,8 @@ export default {
         this.$store.dispatch('user', res.data.user);
         this.$router.push('/');
       })
-      .catch((err) => {
-        return err;
+      .catch(() => {
+        this.error = 'Adresse email ou mot de passe incorrect';
       });
     }
   }
