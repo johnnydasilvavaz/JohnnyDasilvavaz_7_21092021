@@ -1,8 +1,8 @@
 require('dotenv').config();
 const cryptoJS = require('crypto-js');
-const crypto = require('crypto')
 const jwt = require('jsonwebtoken');
 const validator = require('validator');
+const { v4: uuidv4 } = require('uuid');
 
 exports.signup = (req, res, next) => {
     if (!req.body.name) {
@@ -29,9 +29,9 @@ exports.signup = (req, res, next) => {
     if (!validator.isEmail(req.body.email)) {
         return res.status(400).json({message: "The email address format is incorrect !"})
     }
-    const sql = 'INSERT INTO users (uid, name, forname, email, password) VALUES (?);'
+    const sql = 'INSERT INTO users (id, name, forname, email, password) VALUES (?);'
     const hash = cryptoJS.SHA256(req.body.password).toString(cryptoJS.enc.Hex);
-    const uuid = crypto.randomBytes(16).toString('hex');
+    const uuid = uuidv4();
     const user = [
         uuid,
         req.body.name,
@@ -41,7 +41,7 @@ exports.signup = (req, res, next) => {
     ];
     db.query(sql, [user], (err, data, fields) => {
         if (err) return res.status(400).json({err});
-        res.status(200).json({message: 'User created !'});
+        res.status(201).json({message: 'User created !'});
     });
 }
 
@@ -49,15 +49,15 @@ exports.login = (req, res, next) => {
     if (!req.body.password || !req.body.email || !validator.isStrongPassword(req.body.password) || !validator.isEmail(req.body.email) ) {
         return res.status(400).json({message: "Wrong email or password !"})
     }
-    const sql = 'SELECT password, forname, name, avatar, uid, email, role FROM users WHERE email=?;';
+    const sql = 'SELECT password, forname, name, avatar, id, email, role FROM users WHERE email=?;';
     db.query(sql, req.body.email, (err, data, fields) => {
-        if(err) return res.status(400).json({err});
-        if (data[0] == null) return res.status(401).json({error: `le compte n'existe pas !`});
+        if(err) return res.status(404).json({err});
+        if (data[0] == null) return res.status(401).json({error: `Adresse email ou mot de passe incorrect !`});
         if (cryptoJS.SHA256(req.body.password).toString(cryptoJS.enc.Hex) == data[0].password) {
             res.status(200).json({
-                user: {uid: data[0].uid, forname: data[0].forname, name: data[0].name, avatar: data[0].avatar, email: data[0].email, role: data[0].role},
+                user: {uid: data[0].id, forname: data[0].forname, name: data[0].name, avatar: data[0].avatar, email: data[0].email, role: data[0].role},
                 token: jwt.sign(
-                    {userId: data[0].uid},
+                    {userId: data[0].id},
                     process.env.TOKEN_SECRET,
                     {expiresIn: '24h'}
                 )

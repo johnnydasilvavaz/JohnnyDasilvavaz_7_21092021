@@ -1,7 +1,17 @@
 <template>
     <div class="profile">
-        <Modal v-if="showModal" @close="showModal = false"/>
-        <form class="profile__form" @submit.prevent="handleSubmit" v-if="user.uid == id">
+        <Modal v-if="showModal">
+            <h2>Etes-vous sûrs de vouloir supprimer votre compte ?</h2>
+            <p>Veuillez entrer votre mot de passe pour confirmer la suppression de votre compte :</p>
+            <form class="modal__form" action="">
+                <input type="password" placeholder="Votre mot de passe" v-model="password">
+                <div>
+                    <button class="btn" @click.prevent="showModal = false">Annuler</button>
+                    <button class="btn btn--remove" @click.prevent="removeProfile()">Supprimer mon compte</button>
+                </div>
+            </form>
+        </Modal>
+        <form class="profile__form" @submit.prevent="handleSubmit" v-if="user && user?.uid == id">
             <h1>Mon profil</h1>
             <div class="form__item">
                 <img class="profile__img" :src="user.avatar" alt="">
@@ -24,16 +34,16 @@
                 <button class="btn" :disabled="btnDisabled"><fa icon="save" /> Enregistrer</button>
             </div>
         </form>
-        <div class="profile__card" v-else>
+        <div class="profile__card" v-if="user && user?.uid != id">
             <img class="profile__img" :src="avatar" alt="">
             <div class="profile__body">
-                <span class="profile__name">{{ name }}</span>
-                <span class="profile__forname">{{ forname }}</span>
+                <span class="profile__name">{{ namePh }}</span>
+                <span class="profile__forname">{{ fornamePh }}</span>
                 <span class="profile__email">{{ email }}</span>
             </div>
         </div>
         <div class="posts">
-            <Post class="post" v-for="p in posts" :key="p" :pavatar="p.pavatar" :pdate="p.pdate" :pforname="p.pforname" :pname="p.pname" :pid="p.pid" :ptext="p.ptext" :pcom="p" :plikes="p.plikes" :prole="p.prole" :puid="p.puid" :pimg="p.pimgUrl"/>
+            <Post class="post" v-for="p in posts" :key="p" :post="p" :com="p.com"/>
         </div>
     </div>
 </template>
@@ -50,11 +60,13 @@
             return {
                 avatar: '',
                 name: '',
+                namePh: '',
                 forname: '',
+                fornamePh: '',
                 file: null,
-                pageid: this.$route.id,
                 showModal: false,
-                btnDisabled: true
+                btnDisabled: true,
+                password: ''
             }
         },
         components : {
@@ -78,12 +90,12 @@
                     this.btnDisabled = true;
                 }
             },
-            async handleSubmit() {
+            handleSubmit() {
                 const formData = new FormData();
-                if (this.mename != '') {
+                if (this.name != '') {
                     formData.append('name', this.name);
                 }
-                if (this.meforname != '') {
+                if (this.forname != '') {
                     formData.append('forname', this.forname);
                 }
                 if (this.file != null) {
@@ -94,19 +106,35 @@
                         'Content-Type' : 'multipart/form-data'
                     }
                 }
-                await axios.put('me', formData, config)
+                axios.put('me', formData, config)
                 .then((res) => {
                     this.$store.dispatch('user', res.data.user);
-                    console.log(res);
+                    this.$store.dispatch('getPersonalPosts', this.$route.params.id);
+                    this.file = null;
                 })
                 .catch((error) => {
                     return error;
                 });
             },
-            async removeProfile(password) {
-                await axios.delete('me', password)
+            removeProfile() {
+                axios.delete('me', { data: { password: this.password }})
+                .then(() => {
+                    this.showModal = false;
+                    this.$store.dispatch("LOGOUT");
+                    this.$router.push('/login');
+                })
+                .catch((error) => {
+                    return error;
+                })
+                
+            },
+            getPersonalProfile() {
+                axios.get('me/' + this.$route.params.id)
                 .then((res) => {
-                    return res.status(200).json({message: 'Profil supprimé !'})
+                    this.namePh = res.data[0].name;
+                    this.fornamePh = res.data[0].forname;
+                    this.email = res.data[0].email;
+                    this.avatar = res.data[0].avatar;
                 })
                 .catch((error) => {
                     return error;
@@ -115,92 +143,88 @@
         },
         async created() {
             if (this.$store.getters.user.uid != this.$route.params.id) {
-                axios.get('me/' + this.$route.params.id)
-                .then((res) => {
-                    this.name = res.data[0].name;
-                    this.forname = res.data[0].forname;
-                    this.email = res.data[0].email;
-                    this.avatar = res.data[0].avatar;
-                })
-                .catch((error) => {
-                    return error;
-                });
+                this.getPersonalProfile();
             }
-            this.$store.dispatch('getPersonalPosts', this.$route.params.id);
+            this.$store.dispatch('getPersonalPosts', this.$route.params.id);                
         }
     }
 </script>
 
-<style>
+<style lang="scss" scoped>
     .profile {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         padding-top: 5rem;
+        &__card {
+            display: flex;
+            min-width: 30rem;
+            max-width: 30rem;
+            margin-top: 2rem;
+            margin-bottom: 3rem;
+            background-color: white;
+            border-radius: .5rem;
+            border-bottom: .1rem solid #091F43;
+            box-shadow:
+            0px 2.3px 3.6px rgba(0, 0, 0, 0.024),
+            0px 6.3px 10px rgba(0, 0, 0, 0.035),
+            0px 15.1px 24.1px rgba(0, 0, 0, 0.046),
+            0px 50px 80px rgba(0, 0, 0, 0.07);
+        }
+        &__img {
+            width: 8rem;
+            height: 8rem;
+            margin: .5rem;
+            border-radius: .3rem;
+            object-fit: cover;
+        }
+        &__body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        &__name {
+            font-family: roboto-medium;
+            font-size: 1.5rem;
+            padding-bottom: .25rem;
+        }
+        &__forname {
+            font-family: roboto;
+            font-size: 1.5rem;
+            padding-bottom: .25rem;
+        }
+        &__email {
+            font-family: roboto-light;
+        }
+        &__form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-bottom: .1rem solid #091F43;
+            margin-bottom: 3rem;
+            max-width: 30rem;
+            min-width: 30rem;
+            padding: 0;
+            box-shadow:
+            0px 2.3px 3.6px rgba(0, 0, 0, 0.024),
+            0px 6.3px 10px rgba(0, 0, 0, 0.035),
+            0px 15.1px 24.1px rgba(0, 0, 0, 0.046),
+            0px 50px 80px rgba(0, 0, 0, 0.07);
+        }
     }
 
-    .profile__card {
-        display: flex;
-        min-width: 30rem;
-        max-width: 30rem;
-        margin-top: 2rem;
-        margin-bottom: 3rem;
-        background-color: white;
-        border-radius: .5rem;
-        border-bottom: .1rem solid #091F43;
-        box-shadow:
-        0px 2.3px 3.6px rgba(0, 0, 0, 0.024),
-        0px 6.3px 10px rgba(0, 0, 0, 0.035),
-        0px 15.1px 24.1px rgba(0, 0, 0, 0.046),
-        0px 50px 80px rgba(0, 0, 0, 0.07);
-    }
-
-    .profile__img {
-        width: 8rem;
-        height: 8rem;
-        margin: .5rem;
-        border-radius: .3rem;
-        object-fit: cover;
-    }
-
-    .profile__body {
+    .modal__form {
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
-        width: 100%;
-    }
-
-    .profile__name {
-        font-family: roboto-medium;
-        font-size: 1.5rem;
-        padding-bottom: .25rem;
-    }
-
-    .profile__forname {
-        font-family: roboto;
-        font-size: 1.5rem;
-        padding-bottom: .25rem;
-    }
-
-    .profile__email {
-        font-family: roboto-light;
-    }
-
-    .profile__form {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        border-bottom: .1rem solid #091F43;
-        margin-bottom: 3rem;
+        margin: 0;
         max-width: 30rem;
-        min-width: 30rem;
-        padding: 0;
-        box-shadow:
-        0px 2.3px 3.6px rgba(0, 0, 0, 0.024),
-        0px 6.3px 10px rgba(0, 0, 0, 0.035),
-        0px 15.1px 24.1px rgba(0, 0, 0, 0.046),
-        0px 50px 80px rgba(0, 0, 0, 0.07);
+        min-width: 20rem;
+        & input {
+            width: 100%;
+        }
     }
 </style>

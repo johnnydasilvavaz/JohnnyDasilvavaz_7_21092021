@@ -1,20 +1,17 @@
 <template>
     <div class="com">
         <div class="com__avatar">
-            <router-link class="nav__name" :to="{name: 'Profile', params: {id: comUid}}"><img :src="comAvatar" alt=""></router-link>
+            <slot name="avatar" />
         </div>
         <div class="com__body">
             <div class="com__author">
-                <div>
-                    {{ comAuthor }} :
-                </div>
-                <a href="javascript:void(0)" @click="deleteCom(comId)"><fa icon="trash-alt" /></a>
+                <slot name="header"/>
             </div>
             <div class="com__text">
-                {{ comText }}
+                <slot name="comText"/>
             </div>
             <div class="com__date">
-                {{ comDate }}
+                <slot name="comDate"/>
             </div>
         </div>
     </div>
@@ -22,76 +19,56 @@
 
 <script>
     export default {
-        name: 'Comment',
-        data() {
-            return {
-                comments: []
-            }
-        },
-        props: {
-            comText: String,
-            comAuthor: String,
-            comDate: String,
-            comAvatar: String,
-            comUid: String,
-            comId: Number
-        }
+        name: 'Comment'
     }
 </script>
 
-<style>
+<style lang="scss">
     .com {
         display: flex;
         width: calc(100% - 1rem);
         margin: .5rem;
-    }
-
-    .com__avatar {
-        width: 1.5rem;
-        height: 1.5rem;
-        border-radius: .2rem;
-        margin-right: .5rem;
-        overflow: hidden;
-    }
-
-    .com__avatar img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .com__body {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        width: 100%;
-        padding: .25rem;
-        border-radius: .3rem;
-        border: .1rem solid white;
-        box-sizing: border-box;
-    }
-
-    .com__header {
-        display: flex;
-        align-items: center;
-    }
-
-    .com__author {
-        display: flex;
-        justify-content: space-between;
-        font-size: .7rem;
-        width: 100%;
-    }
-
-    .com__text {
-        font-size: .9rem;
-        text-align: left;
-        padding: .25rem 0;
-    }
-
-    .com__date {
-        font-family: roboto-light;
-        font-size: .6rem;
-        align-self: flex-end;
+        &__avatar {
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: .2rem;
+            margin-right: .5rem;
+            overflow: hidden;
+            & img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+        &__body {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+            padding: .25rem;
+            border-radius: .3rem;
+            border: .1rem solid white;
+            box-sizing: border-box;
+        }
+        &__header {
+            display: flex;
+            align-items: center;
+        }
+        &__author {
+            display: flex;
+            justify-content: space-between;
+            font-size: .7rem;
+            width: 100%;
+        }
+        &__text {
+            font-size: .9rem;
+            text-align: left;
+            padding: .25rem 0;
+        }
+        &__date {
+            font-family: roboto-light;
+            font-size: .6rem;
+            align-self: flex-end;
+        }
     }
 </style>

@@ -7,6 +7,7 @@
 
 <script>
     import axios from 'axios';
+    import {mapGetters} from 'vuex';
 
     export default {
         name: 'ComPost',
@@ -20,12 +21,13 @@
             pid: Number
         },
         methods: {
-            async postComment(id) {
-                console.log(id);
-                axios.post('post/comments/' + id, {text: this.text})
-                .then(() => {
-                    this.$store.dispatch('getPosts');
+            async postComment(value) {
+                axios.post('post/comments/' + value, { text: this.text })
+                .then((res) => {
+                    const comment = { ...res.data.comment, avatar: this.user.avatar, name: this.user.name, forname: this.user.forname };
+                    this.$emit('updateComments', { comment: comment });
                     this.text = '';
+                    this.toggleBtn();
                 })
                 .catch((error) => {
                     return error;
@@ -38,11 +40,14 @@
                     this.btnDisabled = true;
                 }
             }
+        },
+        computed: {
+            ...mapGetters(['user'])
         }
     }
 </script>
 
-<style>
+<style lang="scss" scoped>
     .post__comments {
         display: flex;
         width: calc(100% - 1rem);
@@ -50,14 +55,12 @@
         margin: .5rem .5rem;
         padding: 0;
         box-shadow: 0;
-    }
-
-    .post__comments input {
-        padding: 0 .5rem;
-    }
-
-    .post__comments input:focus {
-        outline-offset: -.08rem;
-        outline-color: #244883;
+        & input {
+            padding: 0 .5rem;
+            &:focus {
+                outline-offset: -.08rem;
+                outline-color: #244883;
+            }
+        }
     }
 </style>

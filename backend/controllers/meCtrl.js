@@ -1,10 +1,10 @@
 require('dotenv').config();
-//const cryptoJS = require('crypto-js');
+const cryptoJS = require('crypto-js');
 const validator = require('validator');
 const fs = require('fs');
 
 exports.getProfile = (req, res, next) => {
-    const sql = 'SELECT forname, name, avatar, uid, email FROM users WHERE uid=?;';
+    const sql = 'SELECT forname, name, avatar, id, email FROM users WHERE id=?;';
     db.query(sql, req.params.id, (err, data, fields) => {
         if (err) return res.status(404).json({err});
         return res.status(200).json(data);
@@ -12,23 +12,51 @@ exports.getProfile = (req, res, next) => {
 }
 
 exports.getPosts = (req, res, next) => {
-    const sql = 'SELECT posts.id AS pid, posts.uid AS puid, posts.date AS pdate, posts.text AS ptext, posts.imgUrl AS pimgUrl, posts.likes AS plikes, name AS pname, forname AS pforname, avatar AS pavatar FROM posts INNER JOIN users ON posts.uid=users.uid WHERE posts.uid=? ORDER BY date DESC;';
+    //Select infos from posts and users with user id, ordered by date
+    const sql = 'SELECT posts.id AS pid, posts.user_id AS puid, posts.date AS pdate, posts.text AS ptext, posts.imgUrl AS pimgUrl, posts.likes AS plikes, name AS pname, forname AS pforname, avatar AS pavatar FROM posts INNER JOIN users ON posts.user_id=users.id WHERE posts.user_id=? ORDER BY date DESC;';
     db.query(sql, req.params.id, (err, data, fields) => {
-        if (err) return res.status(401).json({err});
+        if (err) return res.status(404).json({err});
         const posts = {...data};
-        const sql2 = 'SELECT comments.*, name, forname, avatar FROM comments INNER JOIN users ON comments.uid=users.uid ORDER BY date DESC;';
+        //Select infos from comments and users
+        const sql2 = 'SELECT comments.*, name, forname, avatar FROM comments INNER JOIN users ON comments.user_id=users.id ORDER BY date DESC;';
         db.query(sql2, (err, data, fields) => {
-            if (err) return res.status(403).json({err});
+            if (err) return res.status(404).json({err});
             const coms = {...data};
-            if (!coms) return res.status(200).json({...posts});
-            for (let c in coms) {
-                for (let p in posts) {
-                    if (posts[p].pid == coms[c].post_id && !posts[p].com) {
-                        posts[p] = {...posts[p], com: {...coms[c]}};
+            if (!coms) {
+                return res.status(200).json({...posts})
+            } else {
+                //search for post_id that user liked
+                const sqlLiked = 'SELECT post_id FROM likes WHERE user_id=?;';
+                db.query(sqlLiked, req.params.userId, (err, data, fields) => {
+                    if (err) return res.status(404).json({err});
+                    console.log(data);
+                    for (p in posts) {
+                        for (l in data) {
+                            if (data[l].post_id == posts[p].pid) {
+                                console.log("liked");
+                                posts[p] = { ...posts[p], pliked: 1 };
+                                console.log(posts[p]);
+                            } else {
+                                if (!posts[p].pliked) {
+                                    posts[p] = { ...posts[p], pliked: 0 };
+                                }
+                            }
+                        }
+                        //search for coms in each post and add the first one to the post object
+                        let nbrComs = 0;
+                        for (const c in coms) {
+                            if (posts[p].pid == coms[c].post_id) {
+                                nbrComs++;
+                                posts[p] = {...posts[p], nbrComs: nbrComs}
+                                if (!posts[p].com) {
+                                    posts[p] = {...posts[p], com: {...coms[c]}};
+                                }
+                            }
+                        }
                     }
-                }
+                    return res.status(200).json({...posts});
+                });
             }
-            return res.status(200).json({...posts});
         })
     });
 }
@@ -65,9 +93,9 @@ exports.modify = (req, res, next) => {
     }
     if (req.body.forname && req.file) sql += ", ";
     if (req.file) {
-        const sqlImage = 'SELECT avatar FROM users WHERE uid=?'
+        const sqlImage = 'SELECT avatar FROM users WHERE id=?;'
         db.query(sqlImage, req.params.userId, (err, data, fields) => {
-            if (err) return res.status(401).json({err});
+            if (err) return res.status(404).json({err});
             const filename = data[0].avatar.split('/images/')[1];
             if (filename != "avatar.png") {
                 fs.unlink(`images/${filename}`, (error => {
@@ -83,25 +111,66 @@ exports.modify = (req, res, next) => {
         sqlParams.push(`${req.protocol}://${req.get('host')}/images/${req.file.filename}`);
     }
     sqlParams.push(req.params.userId);
-    sql += " WHERE uid=?;";
+    sql += " WHERE id=?;";
 
     db.query(sql, sqlParams, (err, data, fields) => {
         if(err) return res.status(400).json({err});
-        const sql2 = 'SELECT forname, name, avatar, uid, email FROM users WHERE uid=?;';
+        const sql2 = 'SELECT forname, name, avatar, id, email FROM users WHERE id=?;';
         db.query(sql2, req.params.userId, (err, data, fields) => {
-            if(err) return res.status(400).json({err});
+            if(err) return res.status(404).json({err});
             return res.status(200).json({
                 message: "User updated !",
-                user: {uid: data[0].uid, forname: data[0].forname, name: data[0].name, avatar: data[0].avatar, email: data[0].email}
+                user: {uid: data[0].id, forname: data[0].forname, name: data[0].name, avatar: data[0].avatar, email: data[0].email}
             });
         });
     });
 }
 
 exports.delete = (req, res, next) => {
-    const sql = 'DELETE FROM users WHERE uid=? AND password=?;';
-    db.query(sql, [req.params.userId, req.body.password], (err, data, fields) => {
-        if(err) return res.status(400).json({err});
-        return res.status(200).json({message: "User deleted !"});
-    });
+    const password = cryptoJS.SHA256(req.body.password).toString(cryptoJS.enc.Hex);
+    const sqlPass = 'SELECT * FROM users WHERE id=? AND password=?;'
+    db.query(sqlPass, [req.params.userId, password], (err, data, fields) => {
+        if (err) return res.status(404).json({err});
+        if (data.length > 0) {
+            //search for posts images to delete
+            const sqlPosts = 'SELECT imgUrl FROM posts WHERE user_id=?;';
+            db.query(sqlPosts, [req.params.userId], (err, data, fields) => {
+                if (err) return res.status(404).json({err});
+                for (d in data) {
+                    //test if there's an image and delete it if found
+                    if (data[d].imgUrl) {
+                        const filename = data[d].imgUrl.split('/images/')[1];
+                        fs.unlink(`images/${filename}`, (error => {
+                            if (error) {
+                                console.log(error);
+                            } else {
+                                console.log("Image removed !");
+                            }
+                        }));
+                    }
+                }
+                //search for the user's avatar to delete
+                const sqlUserimg = 'SELECT avatar FROM users WHERE id=?;'
+                db.query(sqlUserimg, req.params.userId, (err, data, fields) => {
+                    if (err) return res.status(404).json({err});
+                    const avatar = data[0].avatar.split('/images/')[1];
+                    fs.unlink(`images/${avatar}`, (error => {
+                        if (error) {
+                            console.log(error);
+                        } else {
+                            console.log("Image removed !");
+                        }
+                    }));
+                    //delete user in database
+                    const sql = 'DELETE FROM users WHERE id=? AND password=?;';
+                    db.query(sql, [req.params.userId, password], (err, data, fields) => {
+                        if(err) return res.status(404).json({err});
+                        return res.status(200).json({message: "User deleted !"});
+                    });
+                })
+            })
+        } else {
+            return res.status(401).json({error: 'Mot de passe incorrect'});
+        }
+    })
 }

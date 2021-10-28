@@ -15,7 +15,7 @@
   }
 </script>
 
-<style>
+<style lang="scss">
 @font-face {
   font-family: "roboto";
   src: url('./assets/fonts/Roboto-Regular.ttf');
@@ -44,29 +44,21 @@ html {
   height: 100%;
 }
 
-body:before {
-  content: '';
-  position: fixed;
-  height: 100%;
-  width: 100%;
-  top: 0;
-  left: 0;
-  background-image: url('./assets/img/feedbg.jpg');
-  background-size: cover;
-  opacity: .1;
-  z-index: -1;
-}
-
-.content {
-  font-family: "roboto", Arial, Helvetica, sans-serif;
-  font-size: 16px;
-  scroll-behavior: smooth;
-  scroll-padding-top: 5rem;
-}
-
 body {
   margin: 0;
   padding: 0;
+  &:before {
+    content: '';
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background-image: url('./assets/img/feedbg.jpg');
+    background-size: cover;
+    opacity: .1;
+    z-index: -1;
+  }
 }
 
 #app {
@@ -74,23 +66,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-}
-
-#nav {
-  padding: .5rem 1rem;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a:hover {
-  color: #244883;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
 }
 
 .btn {
@@ -104,20 +79,23 @@ body {
   color: white;
   background-color: #091F43;
   font-weight: 700;
-}
-
-.btn:hover {
-  background-color: #244883;
-  color: white;
-  cursor: pointer;
-}
-
-.btn--remove {
-  background-color: darkred;
-}
-
-.btn--remove:hover {
-  background-color: #D1515A;
+  &:hover {
+    background-color: #244883;
+    color: white;
+    cursor: pointer;
+  }
+  &--remove {
+    background-color: darkred;
+    &:hover {
+      background-color: #D1515A;
+    }
+  }
+  &:disabled {
+    background-color: #244883;
+    &:hover {
+        cursor: default;
+    }
+  }
 }
 
 input {
@@ -138,14 +116,16 @@ form {
   background-color: white;
 }
 
-.form__item {
-  padding: .5rem;
-  display: grid;
-  grid-template-columns: 50% 50%;
-}
-
-.form__item label,input {
-  padding: .25rem;
-  width: 100%;
+.form {
+  &__item {
+    padding: .5rem;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    width: calc(100% - 1rem);
+    & label, input {
+      padding: .25rem;
+      width: 100%;
+    }
+  }
 }
 </style>

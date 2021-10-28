@@ -32,16 +32,16 @@ const store = createStore({
                 .then((res) => {
                     const token = res.data.token;
                     const user  = res.data.user;
-                    console.log(user);
                     localStorage.setItem('token', token);
                     localStorage.setItem('user', JSON.stringify(user));
-                    console.log(localStorage.getItem('user'));
                     axios.defaults.headers.common['Authorization'] = "Bearer " + token;
                     commit('AUTH_SUCCESS', token, user);
                     resolve(res);
                 })
                 .catch(err => { 
                     commit('AUTH_ERROR');
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
                     reject(err);
                 })
             })
@@ -57,6 +57,7 @@ const store = createStore({
         },
         user(context, user) {
             context.commit('user', user);
+            localStorage.setItem('user', JSON.stringify(user));
         },
         async getPosts(context) {
             await axios.get('post')
@@ -87,7 +88,6 @@ const store = createStore({
         },
         token(context, token) {
             context.commit('token', token);
-            console.log(token);
         }
     },
     mutations: {

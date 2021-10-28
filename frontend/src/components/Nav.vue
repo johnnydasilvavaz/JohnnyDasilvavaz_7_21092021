@@ -1,5 +1,5 @@
 <template>
-        <nav id="nav">
+        <nav class="nav">
             <div class="nav__item nav__item--left">
                 <router-link to="/"><img class="logo" alt="Vue logo" src="../assets/img/icon.png">Groupomania</router-link>
             </div>
@@ -12,11 +12,11 @@
             </div>
             <div class="nav__item connected" v-else>
                 <div class="nav__profile">
-                    <router-link class="nav__name" :to="{name: 'Profile', params: {id: user.uid}}">{{ user.forname }} {{ user.name }}</router-link>
+                    <router-link class="nav__name" :to="{name: 'Profile', params: {id: user?.uid}}">{{ user.forname }} {{ user.name }}</router-link>
                     <a class="logoff" href="javascript:void(0)" @click="handleClick"><fa icon="times-circle"/> Se déconnecter</a>
                 </div>
                 <div class="avatar">
-                    <router-link class="nav__name" :to="{name: 'Profile', params: {id: user.uid}}"><img :src="user.avatar" alt=""></router-link>
+                    <router-link class="nav__name" :to="{name: 'Profile', params: {id: user?.uid}}"><img :src="user.avatar" alt=""></router-link>
                 </div>
             </div>
         </nav>
@@ -30,9 +30,7 @@
         methods: {
             handleClick() {
                 this.$store.dispatch("LOGOUT")
-                .then(() => {
-                    this.$router.push('/');
-                });
+                .then(this.$router.push('/login'));
             }
         },
         computed: {
@@ -41,14 +39,15 @@
     }
 </script>
 
-<style>
-    #nav {
+<style lang="scss" scoped>
+    .nav {
         position: fixed;
         display: flex;
         justify-content: space-between;
         align-items: center;
         width: calc(100% - 2rem);
         height: 3rem;
+        padding: .5rem 1rem;
         background-color: white;
         border-bottom: .1rem solid #091F43;
         box-shadow:
@@ -57,43 +56,55 @@
         0px 0px 9px rgba(0, 0, 0, 0.137),
         0px 0px 30px rgba(0, 0, 0, 0.14);
         overflow: hidden;
-    }
-
-    .nav__item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-    }
-
-    .nav__item--home {
-        justify-content: center;
-        font-size: 2rem;
-    }
-
-    .nav__item--left {
-        justify-content: flex-start;
-    }
-
-    .nav__item--left a {
-        display: flex;
-        align-items: center;
-    }
-
-    .nav__item--right {
-        justify-content: flex-end;
-    }
-
-    .nav__item--right a {
-        padding: 0 .5rem;
-    }
-
-    .nav__item a {
-        text-decoration: none;
-    }
-
-    .nav__item a:hover {
-        color: #D1515A;
+        &__item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            &--home {
+                justify-content: center;
+                font-size: 2rem;
+            }
+            &--left {
+                justify-content: flex-start;
+                & a {
+                    display: flex;
+                    align-items: center;
+                }
+            }
+            &--right {
+                justify-content: flex-end;
+                & a {
+                    padding: 0 .5rem;
+                }
+            }
+            & a {
+                text-decoration: none;
+                &:hover {
+                    color: #D1515A;
+                }
+            }
+        }
+        & a {
+            font-weight: bold;
+            color: #2c3e50;
+            &:hover {
+            color: #244883;
+            }
+            &.router-link-exact-active {
+            color: #42b983;
+            }
+        }
+        &__profile {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            padding-right: .5rem;
+        }
+        &__name {
+            text-decoration: none;
+            padding-bottom: .5rem;
+        }
     }
 
     .logo {
@@ -111,10 +122,9 @@
         font-family: roboto-light;
         text-decoration: none;
         font-size: 0.9rem;
-    }
-
-    .logoff:hover {
-        color: #D1515A;
+        &:hover {
+            color: #D1515A;
+        }
     }
 
     .avatar {
@@ -125,23 +135,10 @@
         border: .1rem solid #091F43;
         box-sizing: border-box;
         overflow: hidden;
-    }
-
-    .avatar img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .nav__profile {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        padding-right: .5rem;
-    }
-
-    .nav__name {
-        text-decoration: none;
-        padding-bottom: .5rem;
+        & img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     }
 </style>

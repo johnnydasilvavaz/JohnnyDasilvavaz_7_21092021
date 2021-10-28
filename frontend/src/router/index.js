@@ -4,17 +4,37 @@ import Login from '../views/Login.vue'
 import Signup from '../views/Signup.vue'
 import Profile from '../views/Profile.vue'
 import NotFound from '../views/NotFound.vue'
+import store from '../vuex'
+
+const ifNotAuthenticated = (to, from, next) => {
+  if (!store.getters.isLoggedIn) {
+    next()
+    return
+  }
+  next('/')
+}
+
+const ifAuthenticated = (to, from, next) => {
+  if (store.getters.isLoggedIn) {
+    next()
+    return
+  }
+  store.dispatch('LOGOUT');
+  next('/login')
+}
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    beforeEnter: ifAuthenticated
   },
   {
     path: '/login',
     name: 'Login',
-    component: Login
+    component: Login,
+    beforeEnter: ifNotAuthenticated
   },
   {
     path: '/signup',
@@ -25,7 +45,8 @@ const routes = [
     path: '/profile/:id',
     name: 'Profile',
     component: Profile,
-    props: true
+    props: true,
+    beforeEnter: ifAuthenticated
   },
   {
     path: '/:pathMatch(.*)',
@@ -36,7 +57,10 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+  scrollBehavior() {
+    window.scrollTo(0,0);
+  }
 })
 
 export default router
