@@ -58,12 +58,11 @@
                     }
                 }
                 axios.post('post', formData, config)
-                .then((res) => {
+                .then(() => {
                     this.text = '';
                     this.file = null;
                     this.btnDisabled = true
                     this.$store.dispatch('getPosts');
-                    console.log(res);
                 })
                 .catch((error) => {
                     return error;
@@ -94,17 +93,24 @@
         0px 0px 1.3px rgba(0, 0, 0, 0.1),
         0px 0px 10px rgba(0, 0, 0, 0.2);
         overflow: hidden;
+        @media screen and (max-width: 479.9px) {
+            min-width: 100%;
+            max-width: 100%;
+            border-radius: 0;
+        }
         &__avatar {
             max-width: 8rem;
             max-height: 8rem;
             box-sizing: border-box;
-            border-radius: .5rem 0 0 .5rem;
             background-color: darkgray;
             overflow: hidden;
             & img {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
+            }
+            @media screen and (max-width: 359.9px) {
+                display: none;
             }
         }
         & textarea {
@@ -114,7 +120,6 @@
             resize: none;
             box-sizing: border-box;
             border: 0;
-            border-radius: 0 .5rem 0 0;
             background-color: #efefef;
             padding: .5rem;
             margin: 0;
@@ -140,6 +145,9 @@
         color: white;
         padding: 0;
         margin: 0;
+        @media screen and (max-width: 479.9px) {
+            border-radius: 0;
+        }
         &:hover, .btn--img:hover {
             background-color: #244883;
         }

@@ -29,16 +29,19 @@ exports.getPosts = (req, res, next) => {
                 const sqlLiked = 'SELECT post_id FROM likes WHERE user_id=?;';
                 db.query(sqlLiked, req.params.userId, (err, data, fields) => {
                     if (err) return res.status(404).json({err});
-                    console.log(data);
                     for (p in posts) {
-                        for (l in data) {
-                            if (data[l].post_id == posts[p].pid) {
-                                console.log("liked");
-                                posts[p] = { ...posts[p], pliked: 1 };
-                                console.log(posts[p]);
-                            } else {
-                                if (!posts[p].pliked) {
-                                    posts[p] = { ...posts[p], pliked: 0 };
+                        if (data.length < 1) {
+                            if (!posts[p].pliked) {
+                                posts[p] = { ...posts[p], pliked: 0 };
+                            }
+                        } else {
+                            for (l in data) {
+                                if (data[l].post_id == posts[p].pid) {
+                                    posts[p] = { ...posts[p], pliked: 1 };
+                                } else {
+                                    if (!posts[p].pliked) {
+                                        posts[p] = { ...posts[p], pliked: 0 };
+                                    }
                                 }
                             }
                         }

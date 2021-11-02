@@ -154,9 +154,8 @@
     .profile {
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
-        padding-top: 5rem;
+        padding-top: 3.5rem;
         &__card {
             display: flex;
             min-width: 30rem;
@@ -171,6 +170,11 @@
             0px 6.3px 10px rgba(0, 0, 0, 0.035),
             0px 15.1px 24.1px rgba(0, 0, 0, 0.046),
             0px 50px 80px rgba(0, 0, 0, 0.07);
+            @media screen and (max-width: 497.9px) {
+                max-width: 100%;
+                min-width: 100%;
+                border-radius: 0;
+            }
         }
         &__img {
             width: 8rem;
@@ -213,6 +217,11 @@
             0px 6.3px 10px rgba(0, 0, 0, 0.035),
             0px 15.1px 24.1px rgba(0, 0, 0, 0.046),
             0px 50px 80px rgba(0, 0, 0, 0.07);
+            @media screen and (max-width: 497.9px) {
+                max-width: 100%;
+                min-width: 100%;
+                border-radius: 0;
+            }
         }
     }
 
@@ -226,5 +235,16 @@
         & input {
             width: 100%;
         }
+        @media screen and (max-width: 497.9px) {
+            max-width: 100%;
+            min-width: 100%;
+        }
+    }
+
+    .posts {
+        @media screen and (max-width: 497.9px) {
+                max-width: 100%;
+                min-width: 100%;
+            }
     }
 </style>

@@ -42,5 +42,9 @@
             background-color: rgba(0,0,0,.5);
             z-index: 5;
         }
+        @media screen and (max-width: 497.9px) {
+            max-width: 100%;
+            border-radius: 0;
+        }
     }
 </style>

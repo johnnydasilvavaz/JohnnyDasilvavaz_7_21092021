@@ -51,10 +51,11 @@
     .post__comments {
         display: flex;
         width: calc(100% - 1rem);
-        min-width: 20rem;
+        min-width: 10rem;
         margin: .5rem .5rem;
         padding: 0;
         box-shadow: 0;
+        border-radius: .3rem;
         & input {
             padding: 0 .5rem;
             &:focus {

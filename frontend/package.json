@@ -13,11 +13,10 @@
     "@fortawesome/vue-fontawesome": "^3.0.0-4",
     "axios": "^0.22.0",
     "core-js": "^3.6.5",
-    "emoji-vue": "^0.2.4",
     "nodemon": "^2.0.13",
+    "validator": "^13.6.0",
     "vue": "^3.2.19",
     "vue-router": "^4.0.0-0",
-    "vue3-discordpicker": "^1.1.0",
     "vuex": "^4.0.2"
   },
   "devDependencies": {

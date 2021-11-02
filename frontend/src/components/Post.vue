@@ -78,18 +78,15 @@
         methods: {
             updateComments(payload) {
                 this.comments.push(payload.comment);
-                console.log(this.comments);
-                console.log(this.comments.length);
             },
             deletePost(id) {
                 axios.delete('post/' + id)
-                .then((res) => {
+                .then(() => {
                     if (this.$route.path == "/") {
                         this.$store.dispatch('getPosts');
                     } else {
                         this.$store.dispatch('getPersonalPosts', this.$route.params.id);
                     }
-                    console.log(res);
                 })
                 .catch((error) => {
                     return error;
@@ -190,13 +187,16 @@
             display: flex;
             flex-direction: column;
             width: 100%;
-            border-radius: .5rem;
             margin-bottom: .5rem;
+            border-radius: 0 0 .5rem .5rem;
             border-bottom: .1rem solid #091F43;
             box-shadow:
             0px 0px 1.3px rgba(0, 0, 0, 0.1),
             0px 0px 10px rgba(0, 0, 0, 0.2);
             overflow: hidden;
+            @media screen and (max-width: 479.9px) {
+                border-radius: 0;
+            }
         }
         &__header {
             width: calc(100% - 1rem);
@@ -204,7 +204,6 @@
             justify-content: space-between;
             align-items: center;
             padding: .5rem;
-            border-radius: .5rem .5rem 0 0;
             background-color: #fff;
             overflow: hidden;
             &__left {
@@ -258,7 +257,6 @@
             display: flex;
             width: calc(100% - 2rem);
             padding: 1.5rem 1rem;
-            border-radius: 0 0 .5rem .5rem;
             background-color: #fff;
             white-space: pre-line;
         }

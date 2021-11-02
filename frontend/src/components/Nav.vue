@@ -2,7 +2,7 @@
     <div class="navcontainer">
         <nav class="nav">
             <div class="nav__item nav__item--left">
-                <router-link to="/"><img class="logo" alt="Vue logo" src="../assets/img/icon.png">Groupomania</router-link>
+                <router-link to="/"><img class="logo" alt="Vue logo" src="../assets/img/icon.png"><span class="groupomania">Groupomania</span></router-link>
             </div>
             <div v-if="user" class="nav__item nav__item--home">
                 <router-link to="/"><fa icon="home" /></router-link>
@@ -69,13 +69,20 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            width: 100%;
             &--home {
                 justify-content: center;
                 font-size: 2rem;
+                width: 20%;
+                @media screen and (max-width: 639.9px) {
+                    display: none;
+                }
             }
             &--left {
                 justify-content: flex-start;
+                width: 40%;
+                @media screen and (max-width: 639.9px) {
+                    width: 20%;
+                }
                 & a {
                     display: flex;
                     align-items: center;
@@ -83,8 +90,13 @@
             }
             &--right {
                 justify-content: flex-end;
+                width: 40%;
                 & a {
-                    padding: 0 .5rem;
+                    padding: 0 .25rem;
+                    text-align: center;
+                }
+                @media screen and (max-width: 639.9px) {
+                    width: 80%;
                 }
             }
             & a {
@@ -121,10 +133,20 @@
         object-fit: cover;
     }
 
+    .groupomania {
+        @media screen and (max-width: 639.9px) {
+            display: none;
+        }
+    }
+
     .connected {
         display: flex;
         align-items: center;
         justify-content: flex-end;
+        width: 40%;
+        @media screen and (max-width: 639.9px) {
+            width: 80%;
+        }
     }
 
     .logoff {

@@ -40,13 +40,13 @@ html {
   font-family: "roboto", Arial, Helvetica, sans-serif;
   font-size: 16px;
   scroll-behavior: smooth;
-  scroll-padding-top: 5rem;
   height: 100%;
 }
 
 body {
   margin: 0;
   padding: 0;
+  height: 100%;
   &:before {
     content: '';
     position: fixed;
@@ -66,6 +66,14 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+  height: 100%;
+  & > div {
+    height: 100%;
+  }
+}
+
+.content {
+  height: 100%;
 }
 
 .btn {
@@ -114,6 +122,12 @@ form {
   margin-top: 2rem;
   border-radius: .5rem;
   background-color: white;
+  @media screen and (max-width: 497.9px) {
+      max-width: 100%;
+      min-width: 100%;
+      border-radius: 0;
+      padding: 1rem 0;
+  }
 }
 
 .form {

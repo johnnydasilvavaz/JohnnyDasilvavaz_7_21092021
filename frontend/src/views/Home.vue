@@ -24,6 +24,9 @@
     },
     async created() {
       this.$store.dispatch('getPosts');
+    },
+    mounted() {
+      document.title = 'Groupomania - Accueil';
     }
   }
 </script>
@@ -31,7 +34,7 @@
 <style lang="scss">
   .home {
     width: 100%;
-    padding-top: 5rem;
+    padding-top: 3.5rem;
   }
 
   .feed-container {
@@ -57,5 +60,10 @@
     0px 0px 3px rgba(0, 0, 0, 0.091),
     0px 0px 10px rgba(0, 0, 0, 0.14);
     overflow: hidden;
+    @media screen and (max-width: 479.9px) {
+      max-width: 100%;
+      min-width: 100%;
+      border-radius: 0;
+    }
   }
 </style>

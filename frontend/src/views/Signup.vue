@@ -15,7 +15,7 @@
         <input type="text" name="email" id="email" v-model="email">
       </div>
       <div class="form__item">
-        <label for="password">Mot de passse</label>
+        <label for="password">Mot de passe</label>
         <input type="password" name="password" id="password" v-model="password">
       </div>
       <div class="form__item">
@@ -30,6 +30,9 @@
 
 <script>
 import axios from 'axios';
+import Error from '../components/Error.vue';
+import validator from 'validator';
+
 export default {
   name: 'Signup',
   data() {
@@ -44,9 +47,20 @@ export default {
   },
   methods: {
     handleSubmit() {
+      if (!this.forname || !this.name || !this.email || !this.password || !this.passwordConfirm) {
+        return this.error = 'Tous les champs doivent être renseignés';
+      }
+      if (!validator.isAlpha(validator.blacklist(this.name.toString(), "' -")) || !validator.isAlpha(validator.blacklist(this.forname.toString(), "' -"))) {
+        return this.error = 'Le format du nom ou du prénom est incorrect';
+      }
+      if (!validator.isEmail(this.email)) {
+        return this.error = "Le format de l'adresse email est invalide";
+      }
+      if (!validator.isStrongPassword(this.password)) {
+        return this.error = "Le mot de passe n'est pas assez complexe";
+      }
       if (this.passwordConfirm != this.password) {
-        this.error = 'Le mot de passe et la confirmation ne sont pas identiques';
-        return;
+        return this.error = 'Le mot de passe et la confirmation ne sont pas identiques';
       }
       axios.post('auth/signup', {
       forname: this.forname,
@@ -61,6 +75,9 @@ export default {
         this.error = 'Les informations fournies sont incomplètes/incorrectes'
       })
     }
+  },
+  components: {
+    Error
   }
 }
 </script>
@@ -70,11 +87,12 @@ export default {
   .signup {
     display: flex;
     justify-content: center;
-    padding-top: 5rem;
+    align-items: center;
     &__form {
       display: flex;
       flex-direction: column;
       align-items: center;
+      height: fit-content;
       border-bottom: .1rem solid #091F43;
       box-shadow:
         0px 2.3px 3.6px rgba(0, 0, 0, 0.024),

@@ -18,6 +18,7 @@
 
 <script>
 import Error from '../components/Error.vue';
+import validator from 'validator';
 
 export default {
   components: { Error },
@@ -31,6 +32,12 @@ export default {
   },
   methods: {
     async handleSubmit() {
+      if (!validator.isEmail(this.email) || !validator.isStrongPassword(this.password)) {
+        return this.error = 'Les informations fournies sont incorrectes'
+      }
+      if (!this.email || !this.password) {
+        return this.error = 'Tous les champs doivent être renseignés'
+      }
       this.$store.dispatch("LOGIN", {
         email: this.email,
         password: this.password
@@ -52,11 +59,12 @@ export default {
   .login {
     display: flex;
     justify-content: center;
-    padding-top: 5rem;
+    align-items: center;
     &__form {
       display: flex;
       flex-direction: column;
       align-items: center;
+      height: fit-content;
       border-bottom: .1rem solid #091F43;
       box-shadow:
         0px 2.3px 3.6px rgba(0, 0, 0, 0.024),
