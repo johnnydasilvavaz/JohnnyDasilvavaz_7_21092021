@@ -84,8 +84,9 @@
         min-width: 30rem;
         max-height: 8rem;
         box-sizing: border-box;
-        background-color: #fff;
-        border-radius: .5rem;
+        background-color: $bg-primary-color;
+        border-radius: $border-primary;
+        border: 1px solid white;
         margin-bottom: 3rem;
         margin-top: 2rem;
         padding: 0;
@@ -120,12 +121,16 @@
             resize: none;
             box-sizing: border-box;
             border: 0;
-            background-color: #efefef;
+            background-color: $bg-secondary-color;
             padding: .5rem;
             margin: 0;
             &:focus {
                 background-color: transparent;
-                outline-offset: -.08rem;
+                outline-offset: -2px;
+                border-top-right-radius: $border-primary;
+                @media screen and (max-width: 479.9px) {
+                    border-radius: 0;
+                }
             }
         }
         &__body {
@@ -141,15 +146,15 @@
 
     .btn--submit {
         width: 100%;
-        border-radius: 0 .0 .5rem 0;
-        color: white;
+        border-radius: 0;
+        color: $font-secondary-color;
         padding: 0;
         margin: 0;
         @media screen and (max-width: 479.9px) {
             border-radius: 0;
         }
         &:hover, .btn--img:hover {
-            background-color: #244883;
+            background-color: $secondary-color;
         }
     }
 
@@ -160,11 +165,12 @@
         margin: 0;
         padding: 0 .5rem;
         border: 0;
-        border-right: .05rem solid white;
+        border-right: 1px solid white;
+        border-left: 1px solid white;
         border-radius: 0;
         box-sizing: border-box;
         background-color: #091F43;
-        color: white;
+        color: $font-secondary-color;
         &:hover {
             background-color: #244883;
         }
@@ -182,12 +188,12 @@
         overflow: hidden;
         white-space: nowrap;
         text-decoration: none;
-        background-color: darkred;
-        color: white;
+        background-color: $alert-primary-color;
+        color: $font-secondary-color;
         box-sizing: border-box;
-        border-right: .1rem solid white;
+        border-right: 1px solid white;
         &:hover {
-            background-color: #D1515A;
+            background-color: $alert-secondary-color;
         }
     }
 

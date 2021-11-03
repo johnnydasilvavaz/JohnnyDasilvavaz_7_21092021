@@ -31,7 +31,7 @@
         &__avatar {
             width: 1.5rem;
             height: 1.5rem;
-            border-radius: .2rem;
+            border-radius: $border-secondary;
             margin-right: .5rem;
             overflow: hidden;
             & img {
@@ -46,8 +46,8 @@
             align-items: flex-start;
             width: 100%;
             padding: .25rem;
-            border-radius: .3rem;
-            border: .1rem solid white;
+            border-radius: $border-secondary;
+            border: 1px solid white;
             box-sizing: border-box;
         }
         &__header {

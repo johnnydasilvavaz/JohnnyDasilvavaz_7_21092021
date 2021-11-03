@@ -93,7 +93,7 @@ export default {
       flex-direction: column;
       align-items: center;
       height: fit-content;
-      border-bottom: .1rem solid #091F43;
+      border-bottom: 2px solid $primary-color;
       box-shadow:
         0px 2.3px 3.6px rgba(0, 0, 0, 0.024),
         0px 6.3px 10px rgba(0, 0, 0, 0.035),

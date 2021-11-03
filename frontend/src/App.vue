@@ -65,7 +65,7 @@ body {
   font-family: roboto, Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
+  color: $font-primary-color;
   height: 100%;
   & > div {
     height: 100%;
@@ -81,25 +81,25 @@ body {
   border: 0;
   box-sizing: border-box;
   min-height: 2rem;
-  border-radius: .5rem;
+  border-radius: $border-secondary;
   padding: .5rem;
   margin: 1rem;
-  color: white;
-  background-color: #091F43;
+  color: $font-secondary-color;
+  background-color: $primary-color;
   font-weight: 700;
   &:hover {
-    background-color: #244883;
-    color: white;
+    background-color: $secondary-color;
+    color: $font-secondary-color;
     cursor: pointer;
   }
   &--remove {
-    background-color: darkred;
+    background-color: $alert-primary-color;
     &:hover {
-      background-color: #D1515A;
+      background-color: $alert-secondary-color;
     }
   }
   &:disabled {
-    background-color: #244883;
+    background-color: $secondary-color;
     &:hover {
         cursor: default;
     }
@@ -107,8 +107,8 @@ body {
 }
 
 input {
-  border-radius: .3rem;
-  background-color: #efefef;
+  border-radius: $border-secondary;
+  background-color: $bg-secondary-color;
   border: 0;
   min-height: 2rem;
   padding: 0 .5rem;
@@ -120,8 +120,8 @@ form {
   min-width: 30rem;
   padding: 1rem;
   margin-top: 2rem;
-  border-radius: .5rem;
-  background-color: white;
+  border-radius: $border-primary;
+  background-color: $bg-primary-color;
   @media screen and (max-width: 497.9px) {
       max-width: 100%;
       min-width: 100%;

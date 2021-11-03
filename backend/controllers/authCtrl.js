@@ -29,17 +29,11 @@ exports.signup = (req, res, next) => {
     if (!validator.isEmail(req.body.email)) {
         return res.status(400).json({message: "The email address format is incorrect !"})
     }
-    const sql = 'INSERT INTO users (id, name, forname, email, password) VALUES (?);'
+    const sql = 'INSERT INTO users (id, name, forname, email, password) VALUES (?, ?, ?, ?, AES_ENCRYPT(?, UNHEX(?)));'
     const hash = cryptoJS.SHA256(req.body.password).toString(cryptoJS.enc.Hex);
     const uuid = uuidv4();
-    const user = [
-        uuid,
-        req.body.name,
-        req.body.forname,
-        req.body.email,
-        hash
-    ];
-    db.query(sql, [user], (err, data, fields) => {
+    
+    db.query(sql, [uuid, req.body.name, req.body.forname, req.body.email, hash, process.env.MYSQL_ENCRYPT], (err, data, fields) => {
         if (err) return res.status(400).json({err});
         res.status(201).json({message: 'User created !'});
     });
@@ -49,8 +43,8 @@ exports.login = (req, res, next) => {
     if (!req.body.password || !req.body.email || !validator.isStrongPassword(req.body.password) || !validator.isEmail(req.body.email) ) {
         return res.status(400).json({message: "Wrong email or password !"})
     }
-    const sql = 'SELECT password, forname, name, avatar, id, email, role FROM users WHERE email=?;';
-    db.query(sql, req.body.email, (err, data, fields) => {
+    const sql = 'SELECT AES_DECRYPT(password, UNHEX(?)) AS password, forname, name, avatar, id, email, role FROM users WHERE email=?;';
+    db.query(sql, [process.env.MYSQL_ENCRYPT, req.body.email], (err, data, fields) => {
         if(err) return res.status(404).json({err});
         if (data[0] == null) return res.status(401).json({error: `Adresse email ou mot de passe incorrect !`});
         if (cryptoJS.SHA256(req.body.password).toString(cryptoJS.enc.Hex) == data[0].password) {
@@ -63,7 +57,7 @@ exports.login = (req, res, next) => {
                 )
             });
         } else {
-            return res.status(401).json({error: 'Wrong password !'});
+            return res.status(401).json({error: 'Adresse email ou mot de passe incorrect !'});
         }
     });
 }

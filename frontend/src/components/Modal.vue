@@ -25,9 +25,9 @@
     .modal {
         display: flex;
         flex-direction: column;
-        background-color: white;
-        border-radius: .5rem;
-        border-bottom: .1rem solid #091F43;
+        background-color: $bg-primary-color;
+        border-radius: $border-primary;
+        border-bottom: 2px solid $primary-color;
         padding: 1rem;
         max-width: 30rem;
         &__back {

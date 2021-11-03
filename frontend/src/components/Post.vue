@@ -171,10 +171,10 @@
         align-items: center;
         padding: .5rem;
         & a {
-            color: #091F43;
+            color: $font-primary-color;
             &:hover {
                 cursor: pointer;
-                color: #D1515A;
+                color: $alert-secondary-color;
             }
         }
         &--com {
@@ -188,12 +188,13 @@
             flex-direction: column;
             width: 100%;
             margin-bottom: .5rem;
-            border-radius: 0 0 .5rem .5rem;
-            border-bottom: .1rem solid #091F43;
+            border-radius: 0 0 $border-primary $border-primary;
+            border-bottom: 2px solid $primary-color;
             box-shadow:
             0px 0px 1.3px rgba(0, 0, 0, 0.1),
             0px 0px 10px rgba(0, 0, 0, 0.2);
             overflow: hidden;
+            padding: -2px;
             @media screen and (max-width: 479.9px) {
                 border-radius: 0;
             }
@@ -204,7 +205,7 @@
             justify-content: space-between;
             align-items: center;
             padding: .5rem;
-            background-color: #fff;
+            background-color: $bg-primary-color;
             overflow: hidden;
             &__left {
             display: flex;
@@ -220,10 +221,10 @@
         &__avatar {
             width: 2rem;
             height: 2rem;
-            background-color: #efefef;
-            border-radius: .3rem;
+            background-color: $bg-secondary-color;
+            border-radius: $border-secondary;
             box-sizing: border-box;
-            border: .1rem solid #091F43;
+            border: 2px solid $primary-color;
             overflow: hidden;
             & img {
                 width: 100%;
@@ -257,30 +258,30 @@
             display: flex;
             width: calc(100% - 2rem);
             padding: 1.5rem 1rem;
-            background-color: #fff;
+            background-color: $bg-primary-color;
             white-space: pre-line;
         }
         & input {
             width: 75%;
             border: 0;
-            background-color: #fff;
-            border-radius: .3rem 0 0 .3rem;
+            background-color: $bg-primary-color;
+            border-radius: $border-secondary 0 0 $border-secondary;
             min-height: 2rem;
             box-sizing: border-box;
         }
         & button {
-            border-radius: 0 .3rem .3rem 0;
+            border-radius: 0 $border-secondary $border-secondary 0;
             border: 0;
             width: 25%;
             margin: 0;
-            background-color: #091F43;
-            color: white;
+            background-color: $primary-color;
+            color: $font-secondary-color;
             font-weight: 600;
             &:hover {
-                background-color: #244883;
+                background-color: $secondary-color;
             }
             &--disabled {
-                background-color: #244883;
+                background-color: $secondary-color;
                 &:hover {
                     cursor: default;
                 }
@@ -291,14 +292,14 @@
     .liked {
         color: red;
         &:hover {
-            color: #244883;
+            color: $secondary-color;
         }
     }
 
     .disliked {
         color: #ddd;
         &:hover {
-            color: #244883;
+            color: $secondary-color;
         }
     }
 

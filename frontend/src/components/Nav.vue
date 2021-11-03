@@ -50,7 +50,7 @@
         height: 3.5rem;
         width: 100%;
         background-color: white;
-        border-bottom: .1rem solid #091F43;
+        border-bottom: 2px solid $primary-color;
         box-shadow:
         0px 0px 1.4px rgba(0, 0, 0, 0.097),
         0px 0px 3.8px rgba(0, 0, 0, 0.126),
@@ -99,21 +99,16 @@
                     width: 80%;
                 }
             }
-            & a {
-                text-decoration: none;
-                &:hover {
-                    color: #D1515A;
-                }
-            }
         }
         & a {
+            text-decoration: none;
             font-weight: bold;
-            color: #2c3e50;
+            color: $primary-color;
             &:hover {
-            color: #244883;
+                color: $secondary-color;
             }
             &.router-link-exact-active {
-            color: #42b983;
+                color: #42b983;
             }
         }
         &__profile {
@@ -121,6 +116,9 @@
             flex-direction: column;
             align-items: flex-end;
             padding-right: .5rem;
+            & .logoff:hover {
+                color: $alert-secondary-color;
+            }
         }
         &__name {
             text-decoration: none;
@@ -154,16 +152,16 @@
         text-decoration: none;
         font-size: 0.9rem;
         &:hover {
-            color: #D1515A;
+            color: $alert-secondary-color;
         }
     }
 
     .avatar {
         height: 3rem;
         width: 3rem;
-        background-color: #efefef;
-        border-radius: .5rem;
-        border: .1rem solid #091F43;
+        background-color: $bg-secondary-color;
+        border-radius: $border-primary;
+        border: 2px solid $primary-color;
         box-sizing: border-box;
         overflow: hidden;
         & img {

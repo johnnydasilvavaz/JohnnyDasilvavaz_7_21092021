@@ -162,9 +162,9 @@
             max-width: 30rem;
             margin-top: 2rem;
             margin-bottom: 3rem;
-            background-color: white;
-            border-radius: .5rem;
-            border-bottom: .1rem solid #091F43;
+            background-color: $bg-primary-color;
+            border-radius: $border-primary;
+            border-bottom: 2px solid $primary-color;
             box-shadow:
             0px 2.3px 3.6px rgba(0, 0, 0, 0.024),
             0px 6.3px 10px rgba(0, 0, 0, 0.035),
@@ -180,7 +180,7 @@
             width: 8rem;
             height: 8rem;
             margin: .5rem;
-            border-radius: .3rem;
+            border-radius: $border-secondary;
             object-fit: cover;
         }
         &__body {
@@ -207,7 +207,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            border-bottom: .1rem solid #091F43;
+            border-bottom: 2px solid $primary-color;
             margin-bottom: 3rem;
             max-width: 30rem;
             min-width: 30rem;

@@ -55,11 +55,11 @@
         margin: .5rem .5rem;
         padding: 0;
         box-shadow: 0;
-        border-radius: .3rem;
+        border-radius: $border-secondary;
         & input {
             padding: 0 .5rem;
             &:focus {
-                outline-offset: -.08rem;
+                outline-offset: -1.5px;
                 outline-color: #244883;
             }
         }

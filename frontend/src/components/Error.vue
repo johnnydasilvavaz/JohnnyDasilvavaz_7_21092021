@@ -16,6 +16,6 @@
 <style lang="scss" scoped>
     .error {
         font-family: roboto-medium;
-        color: darkred;
+        color: $alert-primary-color;
     }
 </style>

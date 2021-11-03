@@ -3,6 +3,7 @@
     <div class="feed-container" v-if="user">
       <NewPost />
       <Post class="post" v-for="p in posts" :key="p" :post="p" :com="p.com"/>
+      <div v-if="!posts">Il n'y a pas encore de publications</div>
     </div>
   </div>
 </template>
@@ -51,9 +52,11 @@
     align-items: center;
     max-width: 30rem;
     min-width: 30rem;
-    background-color: #efefef;
-    border-radius: .5rem;
+    background-color: $bg-secondary-color;
+    border-radius: $border-primary;
+    border-bottom: 1px solid white;
     margin-bottom: 2rem;
+    box-sizing: border-box;
     box-shadow:
     0px 0px 0.5px rgba(0, 0, 0, 0.049),
     0px 0px 1.3px rgba(0, 0, 0, 0.07),
