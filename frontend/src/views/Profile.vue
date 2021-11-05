@@ -11,29 +11,32 @@
                 </div>
             </form>
         </Modal>
-        <form class="profile__form" @submit.prevent="handleSubmit" v-if="user && user?.uid == id">
-            <h1>Mon profil</h1>
-            <div class="form__item">
-                <img class="profile__img" :src="user.avatar" alt="">
-                <input type="file" @change="setFile">
-            </div>
-            <div class="form__item">
-                <label for="forname">Prénom </label>
-                <input type="text" id="forname" :placeholder="user.forname" v-model="forname" @input="toggleBtn">
-            </div>
-            <div class="form__item">
-                <label for="name">Nom </label>
-                <input type="text" id="name" :placeholder="user.name" v-model="name" @input="toggleBtn">
-            </div>
-            <div class="form__item">
-                <label for="email">Email </label>
-                <input type="text" id="email" :placeholder="user.email" disabled>
-            </div>
-            <div class="form__item">
-                <button class="btn btn--remove" @click.prevent="showModal = true"><fa icon="trash-alt" /> Supprimer mon compte</button>
-                <button class="btn" :disabled="btnDisabled"><fa icon="save" /> Enregistrer</button>
-            </div>
-        </form>
+        <div class="profile__container">
+            <form class="profile__form" @submit.prevent="handleSubmit" v-if="user && user?.uid == id">
+                <h1>Mon profil</h1>
+                <div class="form__item">
+                    <img class="profile__img" :src="user.avatar" alt="">
+                    <input type="file" @change="setFile">
+                </div>
+                <div class="form__item">
+                    <label for="forname">Prénom </label>
+                    <input type="text" id="forname" :placeholder="user.forname" v-model="forname" @input="toggleBtn">
+                </div>
+                <div class="form__item">
+                    <label for="name">Nom </label>
+                    <input type="text" id="name" :placeholder="user.name" v-model="name" @input="toggleBtn">
+                </div>
+                <div class="form__item">
+                    <label for="email">Email </label>
+                    <input type="text" id="email" :placeholder="user.email" disabled>
+                </div>
+                <div class="form__item">
+                    <button class="btn btn--remove" @click.prevent="showModal = true"><fa icon="trash-alt" /> Supprimer mon compte</button>
+                    <button class="btn" :disabled="btnDisabled"><fa icon="save" /> Enregistrer</button>
+                </div>
+            </form>
+            <Error v-if="error" :error="error" />
+        </div>
         <div class="profile__card" v-if="user && user?.uid != id">
             <img class="profile__img" :src="avatar" alt="">
             <div class="profile__body">
@@ -53,6 +56,7 @@
     import axios from 'axios'
     import Modal from '../components/Modal.vue'
     import Post from '../components/Post.vue'
+    import Error from '../components/Error.vue'
 
     export default {
         name: 'Profile',
@@ -66,12 +70,14 @@
                 file: null,
                 showModal: false,
                 btnDisabled: true,
-                password: ''
+                password: '',
+                error: ''
             }
         },
         components : {
             Modal,
-            Post
+            Post,
+            Error
         },
         props: ['id'],
         computed: {
@@ -99,7 +105,19 @@
                     formData.append('forname', this.forname);
                 }
                 if (this.file != null) {
+                    const MIME_TYPES = {
+                        'image/jpg': 'jpg',
+                        'image/jpeg': 'jpg',
+                        'image/png': 'png',
+                        'image/gif': 'gif'
+                    };
+                    if (!MIME_TYPES[this.file.type]) {
+                        this.file = null;
+                        this.toggleBtn();
+                        return this.error = 'Seuls les fichiers jpeg, png et gif sont autorisés';
+                    }
                     formData.append('image', this.file);
+                    this.error = '';
                 }
                 const config = {
                     header: {
@@ -146,6 +164,9 @@
                 this.getPersonalProfile();
             }
             this.$store.dispatch('getPersonalPosts', this.$route.params.id);                
+        },
+        mounted() {
+            document.title = 'Groupomania - Profil';
         }
     }
 </script>
@@ -156,6 +177,9 @@
         flex-direction: column;
         align-items: center;
         padding-top: 3.5rem;
+        &__container {
+            margin-bottom: 3rem;
+        }
         &__card {
             display: flex;
             min-width: 30rem;
@@ -208,7 +232,6 @@
             flex-direction: column;
             align-items: center;
             border-bottom: 2px solid $primary-color;
-            margin-bottom: 3rem;
             max-width: 30rem;
             min-width: 30rem;
             padding: 0;

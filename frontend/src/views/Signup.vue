@@ -78,6 +78,9 @@ export default {
   },
   components: {
     Error
+  },
+  mounted() {
+    document.title = 'Groupomania - Créer un compte';
   }
 }
 </script>

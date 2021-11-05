@@ -131,8 +131,8 @@ exports.modify = (req, res, next) => {
 
 exports.delete = (req, res, next) => {
     const password = cryptoJS.SHA256(req.body.password).toString(cryptoJS.enc.Hex);
-    const sqlPass = 'SELECT * FROM users WHERE id=? AND password=?;'
-    db.query(sqlPass, [req.params.userId, password], (err, data, fields) => {
+    const sqlPass = 'SELECT * FROM users WHERE id=? AND password=AES_ENCRYPT(?, UNHEX(?));'
+    db.query(sqlPass, [req.params.userId, password, process.env.MYSQL_ENCRYPT], (err, data, fields) => {
         if (err) return res.status(404).json({err});
         if (data.length > 0) {
             //search for posts images to delete
@@ -165,8 +165,8 @@ exports.delete = (req, res, next) => {
                         }
                     }));
                     //delete user in database
-                    const sql = 'DELETE FROM users WHERE id=? AND password=?;';
-                    db.query(sql, [req.params.userId, password], (err, data, fields) => {
+                    const sql = 'DELETE FROM users WHERE id=? AND password=AES_ENCRYPT(?, UNHEX(?));';
+                    db.query(sql, [req.params.userId, password, process.env.MYSQL_ENCRYPT], (err, data, fields) => {
                         if(err) return res.status(404).json({err});
                         return res.status(200).json({message: "User deleted !"});
                     });

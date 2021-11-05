@@ -50,6 +50,9 @@ export default {
         this.error = 'Adresse email ou mot de passe incorrect';
       });
     }
+  },
+  mounted() {
+    document.title = 'Groupomania - Connexion';
   }
 }
 </script>

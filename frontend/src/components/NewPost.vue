@@ -1,23 +1,27 @@
 <template>
-    <form class="upost" @submit.prevent="handlePost">
-        <div class="upost__avatar">
-            <router-link class="nav__name" :to="{name: 'Profile', params: {id: user?.uid}}"><img :src="user.avatar" alt=""></router-link>
-        </div>
-        <div class="upost__body">
-            <textarea name="post" placeholder="Ecrivez un message ici" id="post" cols="20" rows="3" v-model="text" @input="toggleBtn"></textarea>
-            <div class="upost__actions">
-                <label class="btn btn--img" for="fileInput"><fa icon="images"/></label>
-                <input id="fileInput" type="file"  @change="setFile">
-                <a class="file" v-if="this.file" href="javascript:void(0)" @click="removeFile"><fa icon="trash-alt" />&nbsp; {{ this.file.name }}</a>
-                <button class="btn btn--submit" :disabled='btnDisabled'>Envoyer</button>
+    <div class="upost__container">
+        <form class="upost" @submit.prevent="handlePost">
+            <div class="upost__avatar">
+                <router-link class="nav__name" :to="{name: 'Profile', params: {id: user?.uid}}"><img :src="user.avatar" alt=""></router-link>
             </div>
-        </div>
-    </form>
+            <div class="upost__body">
+                <textarea name="post" placeholder="Ecrivez un message ici" id="post" cols="20" rows="3" v-model="text" @input="toggleBtn"></textarea>
+                <div class="upost__actions">
+                    <label class="btn btn--img" for="fileInput"><fa icon="images"/></label>
+                    <input id="fileInput" type="file"  @change="setFile">
+                    <a class="file" v-if="this.file" href="javascript:void(0)" @click="removeFile"><fa icon="trash-alt" />&nbsp; {{ this.file.name }}</a>
+                    <button class="btn btn--submit" :disabled='btnDisabled'>Envoyer</button>
+                </div>
+            </div>
+        </form>
+        <Error v-if="error" :error="error" />
+    </div>
 </template>
 
 <script>
     import axios from 'axios';
     import {mapGetters} from 'vuex';
+    import Error from './Error.vue'
 
     export default {
         name: 'NewPost',
@@ -25,7 +29,8 @@
             return {
                 text: '',
                 file: null,
-                btnDisabled: true
+                btnDisabled: true,
+                error: ''
             }
         },
         methods: {
@@ -50,7 +55,19 @@
                     formData.append('text', this.text);
                 }
                 if (this.file != null) {
+                    const MIME_TYPES = {
+                        'image/jpg': 'jpg',
+                        'image/jpeg': 'jpg',
+                        'image/png': 'png',
+                        'image/gif': 'gif'
+                    };
+                    if (!MIME_TYPES[this.file.type]) {
+                        this.file = null;
+                        this.toggleBtn();
+                        return this.error = 'Seuls les fichiers jpeg, png et gif sont autorisés';
+                    }
                     formData.append('image', this.file);
+                    this.error = '';
                 }
                 const config = {
                     header: {
@@ -70,6 +87,7 @@
             }
         },
         components: {
+            Error
         },
         computed: {
             ...mapGetters(['user'])
@@ -87,7 +105,6 @@
         background-color: $bg-primary-color;
         border-radius: $border-primary;
         border: 1px solid white;
-        margin-bottom: 3rem;
         margin-top: 2rem;
         padding: 0;
         box-shadow:
@@ -98,6 +115,9 @@
             min-width: 100%;
             max-width: 100%;
             border-radius: 0;
+        }
+        &__container {
+            margin-bottom: 3rem;
         }
         &__avatar {
             max-width: 8rem;

@@ -15,6 +15,8 @@
 
 <style lang="scss" scoped>
     .error {
+        display: flex;
+        justify-content: center;
         font-family: roboto-medium;
         color: $alert-primary-color;
     }

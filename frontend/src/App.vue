@@ -7,10 +7,20 @@
 
 <script>
   import Nav from './components/Nav.vue'
+  import axios from 'axios'
   export default {
     name: 'App',
     components: {
       Nav
+    },
+    created() {
+      axios.interceptors.response.use(undefined, (error) => {
+        if (error.response.status === 401 && error.response.config && !error.response.config.__isRetryRequest) {
+          this.$store.dispatch("LOGOUT")
+          .then(this.$router.push('/login'));
+        }
+        throw error;
+      });
     }
   }
 </script>
