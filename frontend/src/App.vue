@@ -15,7 +15,7 @@
     },
     created() {
       axios.interceptors.response.use(undefined, (error) => {
-        if (error.response.status === 401 && error.response.config && !error.response.config.__isRetryRequest) {
+        if (error.response.error.name === "TokenExpiredError" && error.response.config && !error.response.config.__isRetryRequest) {
           this.$store.dispatch("LOGOUT")
           .then(this.$router.push('/login'));
         }

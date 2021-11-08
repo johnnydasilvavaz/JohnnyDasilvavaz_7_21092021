@@ -1,16 +1,16 @@
 <template>
     <div class="upost__container">
-        <form class="upost" @submit.prevent="handlePost">
+        <form class="upost" aria-label="Nouveau post" @submit.prevent="handlePost">
             <div class="upost__avatar">
-                <router-link class="nav__name" :to="{name: 'Profile', params: {id: user?.uid}}"><img :src="user.avatar" alt=""></router-link>
+                <router-link class="nav__name" :to="{name: 'Profile', params: {id: user?.uid}}"><img :src="user.avatar" alt="Ma photo de profil"></router-link>
             </div>
             <div class="upost__body">
-                <textarea name="post" placeholder="Ecrivez un message ici" id="post" cols="20" rows="3" v-model="text" @input="toggleBtn"></textarea>
+                <textarea name="post" placeholder="Ecrivez un message ici" id="post" cols="20" rows="3" v-model="text" @input="toggleBtn" aria-label="Ecrivez votre nouveau message ici"></textarea>
                 <div class="upost__actions">
-                    <label class="btn btn--img" for="fileInput"><fa icon="images"/></label>
-                    <input id="fileInput" type="file"  @change="setFile">
+                    <label class="btn btn--img" for="fileInput"><fa icon="images" aria-label="Ajouter une image"/></label>
+                    <input id="fileInput" type="file" title="Ajouter une image" @change="setFile">
                     <a class="file" v-if="this.file" href="javascript:void(0)" @click="removeFile"><fa icon="trash-alt" />&nbsp; {{ this.file.name }}</a>
-                    <button class="btn btn--submit" :disabled='btnDisabled'>Envoyer</button>
+                    <button class="btn btn--submit" :disabled='btnDisabled' aria-label="Publier un nouveau post">Envoyer</button>
                 </div>
             </div>
         </form>
@@ -118,6 +118,10 @@
         }
         &__container {
             margin-bottom: 3rem;
+            @media screen and (max-width: 479.9px) {
+                min-width: 100%;
+                max-width: 100%;
+            }
         }
         &__avatar {
             max-width: 8rem;

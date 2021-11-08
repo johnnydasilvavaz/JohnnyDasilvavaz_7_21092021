@@ -135,6 +135,15 @@ exports.delete = (req, res, next) => {
     db.query(sqlPass, [req.params.userId, password, process.env.MYSQL_ENCRYPT], (err, data, fields) => {
         if (err) return res.status(404).json({err});
         if (data.length > 0) {
+            //Delete user's avatar
+            const avatar = data[0].avatar.split('/images/')[1];
+            fs.unlink(`images/${avatar}`, (error => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    console.log("Image removed !");
+                }
+            }));
             //search for posts images to delete
             const sqlPosts = 'SELECT imgUrl FROM posts WHERE user_id=?;';
             db.query(sqlPosts, [req.params.userId], (err, data, fields) => {
@@ -152,18 +161,9 @@ exports.delete = (req, res, next) => {
                         }));
                     }
                 }
-                //search for the user's avatar to delete
-                const sqlUserimg = 'SELECT avatar FROM users WHERE id=?;'
-                db.query(sqlUserimg, req.params.userId, (err, data, fields) => {
+                const sqlComs = 'UPDATE posts, (SELECT post_id, COUNT(IF(user_id=?, 1, NULL)) nbrusercom FROM comments GROUP BY post_id) AS commented SET nbrcoms=nbrcoms-commented.nbrusercom WHERE posts.id=commented.post_id;';
+                db.query(sqlComs, req.params.userId, (err, data, fields) => {
                     if (err) return res.status(404).json({err});
-                    const avatar = data[0].avatar.split('/images/')[1];
-                    fs.unlink(`images/${avatar}`, (error => {
-                        if (error) {
-                            console.log(error);
-                        } else {
-                            console.log("Image removed !");
-                        }
-                    }));
                     //delete user in database
                     const sql = 'DELETE FROM users WHERE id=? AND password=AES_ENCRYPT(?, UNHEX(?));';
                     db.query(sql, [req.params.userId, password, process.env.MYSQL_ENCRYPT], (err, data, fields) => {

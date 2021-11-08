@@ -1,11 +1,11 @@
 <template>
-  <div class="home">
+  <main class="home">
     <div class="feed-container" v-if="user">
       <NewPost />
       <Post class="post" v-for="p in posts" :key="p" :post="p" :com="p.com"/>
       <div v-if="!posts">Il n'y a pas encore de publications</div>
     </div>
-  </div>
+  </main>
 </template>
 
 <script>

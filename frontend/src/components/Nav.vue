@@ -1,11 +1,11 @@
 <template>
-    <div class="navcontainer">
+    <header class="navcontainer">
         <nav class="nav">
             <div class="nav__item nav__item--left">
-                <router-link to="/"><img class="logo" alt="Vue logo" src="../assets/img/icon.png"><span class="groupomania">Groupomania</span></router-link>
+                <router-link to="/"><img class="logo" alt="Accueil" src="../assets/img/icon.png"><h1 class="groupomania">Groupomania</h1></router-link>
             </div>
             <div v-if="user" class="nav__item nav__item--home">
-                <router-link to="/"><fa icon="home" /></router-link>
+                <router-link aria-label="Accueil" to="/"><fa icon="home" /></router-link>
             </div>
             <div class="nav__item nav__item--right" v-if="!user">
                 <router-link to="/login">Se connecter</router-link> |
@@ -17,11 +17,11 @@
                     <a class="logoff" href="javascript:void(0)" @click="handleClick"><fa icon="times-circle"/> Se déconnecter</a>
                 </div>
                 <div class="avatar">
-                    <router-link class="nav__name" :to="{name: 'Profile', params: {id: user?.uid}}"><img :src="user.avatar" alt=""></router-link>
+                    <router-link class="nav__name" :to="{name: 'Profile', params: {id: user?.uid}}"><img :src="user.avatar" alt="Ma photo de profil"></router-link>
                 </div>
             </div>
         </nav>
-    </div>
+    </header>
 </template>
 
 <script>
@@ -108,7 +108,7 @@
                 color: $secondary-color;
             }
             &.router-link-exact-active {
-                color: #42b983;
+                color: teal;
             }
         }
         &__profile {
@@ -132,6 +132,8 @@
     }
 
     .groupomania {
+        font-size: 1rem;
+        margin: 0;
         @media screen and (max-width: 639.9px) {
             display: none;
         }

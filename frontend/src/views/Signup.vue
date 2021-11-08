@@ -1,5 +1,5 @@
 <template>
-  <div class="signup">
+  <main class="signup">
     <form class="signup__form" @submit.prevent="handleSubmit">
       <h1>Création de compte</h1>
       <div class="form__item">
@@ -19,13 +19,13 @@
         <input type="password" name="password" id="password" v-model="password">
       </div>
       <div class="form__item">
-        <label >Confirmation</label>
+        <label for="passwordConfirm">Confirmation</label>
         <input type="password" name="passwordConfirm" id="passwordConfirm" v-model="passwordConfirm">
       </div>
       <button class="btn">Créer mon compte</button>
       <Error v-if="error" :error="error" />
     </form>
-  </div>
+  </main>
 </template>
 
 <script>

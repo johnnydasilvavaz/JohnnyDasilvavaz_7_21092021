@@ -4,7 +4,7 @@
             <div class="post__header">
                 <div class="post__header__left">
                     <div class="post__avatar">
-                        <router-link class="nav__name" :to="{name: 'Profile', params: {id: post.puid}}"><img :src="post.pavatar" alt=""></router-link>
+                        <router-link aria-label="Profil" class="nav__name" :to="{name: 'Profile', params: {id: post.puid}}"><img :src="post.pavatar" alt="Photo de profil"></router-link>
                     </div>
                     <div class="post__infos">
                         <span class="post__user">
@@ -19,14 +19,14 @@
                 <div class="post__header__right">
                     <div>
                         <span>{{ postLikes }}</span>
-                        <a :class="postLiked == 1 ? 'liked' : 'disliked'" href="javascript:void(0)" @click="likePost(post.pid)"><fa icon="heart" /></a>
+                        <a :class="postLiked == 1 ? 'liked' : 'disliked'" href="javascript:void(0)" aria-label="Liker le post" @click="likePost(post.pid)"><fa icon="heart" /></a>
                     </div>
                     <div v-if="post.puid == user?.uid || user?.role == 'admin'" class="trash">
-                        <a href="javascript:void(0)" @click="deletePost(post.pid)"><fa icon="trash-alt" /></a>
+                        <a href="javascript:void(0)" aria-label="Supprimer le post" @click="deletePost(post.pid)"><fa icon="trash-alt" /></a>
                     </div>
                 </div>
             </div>
-            <img class="post__img" v-if="post.pimgUrl" :src="post.pimgUrl" alt="">
+            <img class="post__img" v-if="post.pimgUrl" :src="post.pimgUrl" alt="Image du post">
             <div class="post__text" v-if="post.ptext" v-html="post.ptext">
             </div>
         </div>
@@ -34,12 +34,12 @@
             <a v-if="!comExpand && post.nbrComs > 1" href="javascript:void(0)" @click="getComments(post.pid)"><fa icon="sort-up" /> Charger les commentaires précédents <fa icon="sort-up" /></a>
             <Comment v-for="c in comments" :key="c">
                 <template v-slot:avatar>
-                    <router-link :to="{name: 'Profile', params: {id: c.user_id}}"><img :src="c.avatar" alt=""></router-link>
+                    <router-link aria-label="Profil" :to="{name: 'Profile', params: {id: c.user_id}}"><img :src="c.avatar" alt=""></router-link>
                 </template>
                 <template v-slot:header>
                     <div>{{ c.forname }} {{ c.name }} :</div>
                     <div class="trash trash--com">
-                        <a v-if="c.user_id == user?.uid || user?.role == 'admin'" href="javascript:void(0)" @click="deleteCom(c.id, c.post_id)"><fa icon="trash-alt" /></a>
+                        <a v-if="c.user_id == user?.uid || user?.role == 'admin'" href="javascript:void(0)" aria-label="Supprimer le commentaire" @click="deleteCom(c.id, c.post_id)"><fa icon="trash-alt" /></a>
                     </div>
                 </template>
                 <template v-slot:comText>

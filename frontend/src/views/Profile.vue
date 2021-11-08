@@ -1,5 +1,5 @@
 <template>
-    <div class="profile">
+    <main class="profile">
         <Modal v-if="showModal">
             <h2>Etes-vous sûrs de vouloir supprimer votre compte ?</h2>
             <p>Veuillez entrer votre mot de passe pour confirmer la suppression de votre compte :</p>
@@ -9,13 +9,14 @@
                     <button class="btn" @click.prevent="showModal = false">Annuler</button>
                     <button class="btn btn--remove" @click.prevent="removeProfile()">Supprimer mon compte</button>
                 </div>
+                <Error v-if="invalidPass" :error="invalidPass"/>
             </form>
         </Modal>
         <div class="profile__container">
             <form class="profile__form" @submit.prevent="handleSubmit" v-if="user && user?.uid == id">
-                <h1>Mon profil</h1>
+                <h2>Mon profil</h2>
                 <div class="form__item">
-                    <img class="profile__img" :src="user.avatar" alt="">
+                    <img class="profile__img" :src="user.avatar" alt="Ma photo de profil">
                     <input type="file" @change="setFile">
                 </div>
                 <div class="form__item">
@@ -38,7 +39,7 @@
             <Error v-if="error" :error="error" />
         </div>
         <div class="profile__card" v-if="user && user?.uid != id">
-            <img class="profile__img" :src="avatar" alt="">
+            <img class="profile__img" :src="avatar" alt="Photo de profil">
             <div class="profile__body">
                 <span class="profile__name">{{ namePh }}</span>
                 <span class="profile__forname">{{ fornamePh }}</span>
@@ -48,7 +49,7 @@
         <div class="posts">
             <Post class="post" v-for="p in posts" :key="p" :post="p" :com="p.com"/>
         </div>
-    </div>
+    </main>
 </template>
 
 <script>
@@ -71,7 +72,8 @@
                 showModal: false,
                 btnDisabled: true,
                 password: '',
-                error: ''
+                error: '',
+                invalidPass: ''
             }
         },
         components : {
@@ -138,13 +140,14 @@
                 axios.delete('me', { data: { password: this.password }})
                 .then(() => {
                     this.showModal = false;
+                    this.invalidPass = '';
                     this.$store.dispatch("LOGOUT");
                     this.$router.push('/login');
                 })
-                .catch((error) => {
-                    return error;
+                .catch(() => {
+                    this.password = '';
+                    return this.invalidPass = "Mot de passe incorrect";
                 })
-                
             },
             getPersonalProfile() {
                 axios.get('me/' + this.$route.params.id)
@@ -184,7 +187,6 @@
             display: flex;
             min-width: 30rem;
             max-width: 30rem;
-            margin-top: 2rem;
             margin-bottom: 3rem;
             background-color: $bg-primary-color;
             border-radius: $border-primary;

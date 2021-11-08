@@ -1,7 +1,7 @@
 <template>
-    <form class="post__comments" @submit.prevent="postComment(pid)">
-        <input type="text" placeholder="Commentez la publication" v-model="text" @input="toggleBtn">
-        <button class="btn" :disabled="btnDisabled">Envoyer</button>
+    <form :name="pid" class="post__comments" title="Nouveau commentaire" @submit.prevent="postComment(pid)">
+        <input :aria-label="pid" type="text" placeholder="Commentez la publication" v-model="text" @input="toggleBtn">
+        <button :aria-label="pid" class="btn" :disabled="btnDisabled">Envoyer</button>
     </form>
 </template>
 

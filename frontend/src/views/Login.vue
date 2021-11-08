@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <main class="login">
     <form class="login__form" @submit.prevent="handleSubmit">
       <h1>Connexion</h1>
       <div class="form__item">
@@ -13,7 +13,7 @@
       <button class="btn">Se connecter</button>
       <Error v-if="error" :error="error" />
     </form>
-  </div>
+  </main>
 </template>
 
 <script>
