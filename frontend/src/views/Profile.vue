@@ -58,6 +58,7 @@
     import Modal from '../components/Modal.vue'
     import Post from '../components/Post.vue'
     import Error from '../components/Error.vue'
+    import validator from 'validator'
 
     export default {
         name: 'Profile',
@@ -101,9 +102,15 @@
             handleSubmit() {
                 const formData = new FormData();
                 if (this.name != '') {
+                    if (!validator.isAlpha(validator.blacklist(this.name.toString(), "' -"))) {
+                        return this.error = 'Le format du nom est incorrect';
+                    }
                     formData.append('name', this.name);
                 }
                 if (this.forname != '') {
+                    if (!validator.isAlpha(validator.blacklist(this.forname.toString(), "' -"))) {
+                        return this.error = 'Le format du prénom est incorrect';
+                    }
                     formData.append('forname', this.forname);
                 }
                 if (this.file != null) {
@@ -131,6 +138,9 @@
                     this.$store.dispatch('user', res.data.user);
                     this.$store.dispatch('getPersonalPosts', this.$route.params.id);
                     this.file = null;
+                    this.name = '';
+                    this.forname = '';
+                    this.error = '';
                 })
                 .catch((error) => {
                     return error;

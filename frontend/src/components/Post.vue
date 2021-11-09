@@ -31,7 +31,8 @@
             </div>
         </div>
         <div v-if="post.nbrComs > 0 || comments.length > 0" class="comments">
-            <a v-if="!comExpand && post.nbrComs > 1" href="javascript:void(0)" @click="getComments(post.pid)"><fa icon="sort-up" /> Charger les commentaires précédents <fa icon="sort-up" /></a>
+            <a v-if="!comExpand && post.nbrComs == 2" href="javascript:void(0)" @click="getComments(post.pid)"><fa icon="sort-up" /> Charger le commentaire précédent <fa icon="sort-up" /></a>
+            <a v-if="!comExpand && post.nbrComs > 2" href="javascript:void(0)" @click="getComments(post.pid)"><fa icon="sort-up" /> Charger les {{ post.nbrComs - 1 }} commentaires précédents <fa icon="sort-up" /></a>
             <Comment v-for="c in comments" :key="c">
                 <template v-slot:avatar>
                     <router-link aria-label="Profil" :to="{name: 'Profile', params: {id: c.user_id}}"><img :src="c.avatar" alt=""></router-link>

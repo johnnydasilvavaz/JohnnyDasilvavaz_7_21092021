@@ -17,10 +17,10 @@ exports.signup = (req, res, next) => {
     if (!req.body.password) {
         return res.status(400).json({message: "Your password is empty !"})
     }
-    if (!validator.isAlphanumeric(validator.blacklist(req.body.name.toString(), ' -'))) {
+    if (!validator.isAlphanumeric(validator.blacklist(req.body.name.toString(), "' -"))) {
         return res.status(400).json({message: "The name is incorrect !"})
     }
-    if (!validator.isAlphanumeric(validator.blacklist(req.body.forname.toString(), ' -'))) {
+    if (!validator.isAlphanumeric(validator.blacklist(req.body.forname.toString(), "' -"))) {
         return res.status(400).json({message: "The forname is incorrect !"})
     }
     if (!validator.isStrongPassword(req.body.password)) {

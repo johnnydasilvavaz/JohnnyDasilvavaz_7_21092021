@@ -66,8 +66,8 @@ exports.getPosts = (req, res, next) => {
 
 exports.modify = (req, res, next) => {
     //Check if the fields are empty and with validator
-    if ((req.body.name && !validator.isAlphanumeric(validator.blacklist(req.body.name.toString(), ' -'))) ||
-    (req.body.forname && !validator.isAlphanumeric(validator.blacklist(req.body.forname.toString(), ' -')))) {
+    if ((req.body.name && !validator.isAlphanumeric(validator.blacklist(req.body.name.toString(), "' -"))) ||
+    (req.body.forname && !validator.isAlphanumeric(validator.blacklist(req.body.forname.toString(), "' -")))) {
         if (req.file) {
             fs.unlink(`images/${req.file.filename}`, (error => {
                 if (error) {
@@ -136,14 +136,16 @@ exports.delete = (req, res, next) => {
         if (err) return res.status(404).json({err});
         if (data.length > 0) {
             //Delete user's avatar
-            const avatar = data[0].avatar.split('/images/')[1];
-            fs.unlink(`images/${avatar}`, (error => {
-                if (error) {
-                    console.log(error);
-                } else {
-                    console.log("Image removed !");
-                }
-            }));
+            if (data[0].avatar.split('/images/')[1] != "avatar.png") {
+                const avatar = data[0].avatar.split('/images/')[1];
+                fs.unlink(`images/${avatar}`, (error => {
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        console.log("Image removed !");
+                    }
+                }));
+            }
             //search for posts images to delete
             const sqlPosts = 'SELECT imgUrl FROM posts WHERE user_id=?;';
             db.query(sqlPosts, [req.params.userId], (err, data, fields) => {
