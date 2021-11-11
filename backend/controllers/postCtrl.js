@@ -111,10 +111,10 @@ exports.deletePost = (req, res, next) => {
 
 exports.createComment = (req, res, next) => {
     if (!req.body.text) {
-        return res.status(400).json({message: "Your need to enter text or image !"})
+        return res.status(400).json({message: "Your need to enter text !"})
     };
     const sql = 'INSERT INTO comments (user_id, text, post_id) VALUES (?);';
-    const comment = [req.params.userId, req.body.text, req.params.id];
+    const comment = [req.params.userId, validator.escape(req.body.text), req.params.id];
     db.query(sql, [comment], (err, data, fields) => {
         if (err) return res.status(401).json({err});
         const comId = data.insertId;

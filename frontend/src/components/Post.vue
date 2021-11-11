@@ -44,7 +44,7 @@
                     </div>
                 </template>
                 <template v-slot:comText>
-                    {{ c.text }}
+                    <div  v-html="c.text"></div>
                 </template>
                 <template v-slot:comDate>
                     {{ c.date }}
