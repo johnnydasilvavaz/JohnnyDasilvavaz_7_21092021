@@ -152,7 +152,7 @@
                     this.showModal = false;
                     this.invalidPass = '';
                     this.$store.dispatch("LOGOUT");
-                    this.$router.push('/login');
+                    this.$router.push({name: 'Login'});
                 })
                 .catch(() => {
                     this.password = '';

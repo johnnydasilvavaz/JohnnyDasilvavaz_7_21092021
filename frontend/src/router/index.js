@@ -11,7 +11,7 @@ const ifNotAuthenticated = (to, from, next) => {
     next()
     return
   }
-  next('/')
+  next('/social-frontend/')
 }
 
 const ifAuthenticated = (to, from, next) => {
@@ -20,36 +20,40 @@ const ifAuthenticated = (to, from, next) => {
     return
   }
   store.dispatch('LOGOUT');
-  next('/login')
+  next('/social-frontend/login')
 }
 
 const routes = [
   {
     path: '/',
+    redirect: { name: 'Home'}
+  },
+  {
+    path: '/social-frontend/',
     name: 'Home',
     component: Home,
     beforeEnter: ifAuthenticated
   },
   {
-    path: '/login',
+    path: '/social-frontend/login',
     name: 'Login',
     component: Login,
     beforeEnter: ifNotAuthenticated
   },
   {
-    path: '/signup',
+    path: '/social-frontend/signup',
     name: 'Signup',
     component: Signup
   },
   {
-    path: '/profile/:id',
+    path: '/social-frontend/profile/:id',
     name: 'Profile',
     component: Profile,
     props: true,
     beforeEnter: ifAuthenticated
   },
   {
-    path: '/:pathMatch(.*)',
+    path: '/social-frontend/:pathMatch(.*)',
     name: 'NotFound',
     component: NotFound
   }

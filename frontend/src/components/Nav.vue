@@ -2,14 +2,14 @@
     <header class="navcontainer">
         <nav class="nav">
             <div class="nav__item nav__item--left">
-                <router-link to="/"><img class="logo" alt="Accueil" src="../assets/img/icon.png"><h1 class="groupomania">Groupomania</h1></router-link>
+                <router-link :to="{name: 'Home'}"><img class="logo" alt="Accueil" src="../assets/img/icon.png"><h1 class="groupomania">Groupomania</h1></router-link>
             </div>
             <div v-if="user" class="nav__item nav__item--home">
-                <router-link aria-label="Accueil" to="/"><fa icon="home" /></router-link>
+                <router-link aria-label="Accueil" :to="{name: 'Home'}"><fa icon="home" /></router-link>
             </div>
             <div class="nav__item nav__item--right" v-if="!user">
-                <router-link to="/login">Se connecter</router-link> |
-                <router-link to="/signup">Créer un compte</router-link>
+                <router-link :to="{name: 'Login'}">Se connecter</router-link> |
+                <router-link :to="{name: 'Signup'}">Créer un compte</router-link>
             </div>
             <div class="nav__item connected" v-else>
                 <div class="nav__profile">
@@ -32,7 +32,7 @@
         methods: {
             handleClick() {
                 this.$store.dispatch("LOGOUT")
-                .then(this.$router.push('/login'));
+                .then(this.$router.push({name: 'Login'}));
             }
         },
         computed: {

@@ -25,7 +25,7 @@ db = mysql.createConnection({
     dateStrings: true
 });
 
-db.query('CREATE DATABASE IF NOT EXISTS groupomania CHARACTER SET utf8mb4;');
+db.query('CREATE DATABASE IF NOT EXISTS ' + process.env.DATABASE + ' CHARACTER SET utf8mb4;');
 db.query('USE ' + process.env.DATABASE + ';');
 db.query('SET NAMES utf8mb4;')
 db.query('CREATE TABLE IF NOT EXISTS users (`id` VARCHAR(36) NOT NULL, `name` VARCHAR(125) NOT NULL, `forname` VARCHAR(125) NOT NULL, `email` VARCHAR(125) NOT NULL, `password` BLOB NOT NULL, `avatar` VARCHAR(125) DEFAULT "http://localhost:3000/images/avatar.png", `role` VARCHAR(5) DEFAULT "user", PRIMARY KEY (`id`) USING BTREE, UNIQUE INDEX `email` (`email`) USING BTREE, UNIQUE INDEX `id` (`id`) USING BTREE) CHARACTER SET utf8mb4;');

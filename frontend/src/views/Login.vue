@@ -44,7 +44,7 @@ export default {
       })
       .then((res) => {
         this.$store.dispatch('user', res.data.user);
-        this.$router.push('/');
+        this.$router.push({name: 'Home'});
       })
       .catch(() => {
         this.error = 'Adresse email ou mot de passe incorrect';

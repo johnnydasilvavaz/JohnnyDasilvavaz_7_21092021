@@ -69,7 +69,7 @@ export default {
       password: this.password
       })
       .then(() => {
-        this.$router.push('/Login');
+        this.$router.push({name: 'Login'});
       })
       .catch(() => {
         this.error = 'Les informations fournies sont incomplètes/incorrectes'
